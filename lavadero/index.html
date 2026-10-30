@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lavadero Auto House</title>
+<meta name="description" content="Lavado exterior e interior en Mar del Plata. Reservá tu turno por WhatsApp con Cristian.">
+<meta name="theme-color" content="#0a0a0a">
+<meta property="og:title" content="La Guardería Auto House · Lavadero">
+<meta property="og:description" content="Tu auto, impecable. Reservá tu turno por WhatsApp.">
+<meta property="og:image" content="poster.jpg">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cinzel:wght@500&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#0a0a0a}
+body{background:#0a0a0a;color:#e8e5de;font-family:Montserrat,Arial,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
+a{-webkit-tap-highlight-color:transparent}
+.hero{position:relative;height:100svh;min-height:560px;max-height:900px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.55) 0%,rgba(10,10,10,.05) 28%,rgba(10,10,10,.35) 58%,#0a0a0a 100%)}
+.top,.in{position:relative;z-index:1}
+.top{text-align:center;padding:26px 20px 0}
+.top img{width:118px;height:auto}
+.in{padding:0 24px 30px;max-width:560px;margin:0 auto;width:100%}
+.hook{font-size:14px;line-height:1.55;letter-spacing:.03em;color:#ddd8cf;margin-bottom:12px;max-width:360px}
+h1{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:52px;line-height:1;text-transform:uppercase;color:#fff;letter-spacing:.01em}
+.sub{font-size:15px;line-height:1.55;margin-top:12px;color:#ddd8cf;max-width:380px}
+.cta{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin-top:22px;padding:14px 18px 13px;background:#25D366;color:#fff;text-decoration:none;border-radius:6px;box-shadow:0 6px 20px rgba(37,211,102,.25)}
+.cta b,.bar b{display:flex;align-items:center;gap:12px;font-family:Anton,Impact,sans-serif;font-weight:400;font-size:32px;line-height:1;letter-spacing:.06em;text-transform:uppercase}
+.cta svg,.bar svg{width:28px;height:28px;fill:#fff;flex:none}
+.cta small{display:block;font-weight:600;font-size:11px;letter-spacing:.03em;color:#eafff1;margin-top:6px}
+.w{max-width:560px;margin:0 auto;padding:0 24px}
+.line{width:40px;height:1px;background:#c6a35a;margin:56px auto 22px}
+.kick{text-align:center;font-family:Cinzel,serif;font-size:11px;letter-spacing:.32em;color:#c6a35a;margin-bottom:10px}
+h2{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:30px;text-transform:uppercase;text-align:center;color:#fff;letter-spacing:.02em}
+.list{margin-top:24px;border-top:1px solid #222}
+.it{display:flex;justify-content:space-between;align-items:center;padding:17px 2px;border-bottom:1px solid #222;font-size:15px}
+.it span{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8a857b}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:28px}
+.gal img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;border-radius:2px}
+.vid{margin-top:26px;position:relative;border-radius:2px;overflow:hidden}
+.vid video{width:100%;display:block;aspect-ratio:4/5;object-fit:cover}
+.steps{margin-top:24px}
+.st{display:flex;gap:18px;padding:12px 0;align-items:flex-start}
+.st b{font-family:Anton,sans-serif;font-weight:400;font-size:24px;color:#c6a35a;min-width:22px;line-height:1.1}
+.st p{font-size:15px;line-height:1.55}
+.info{margin-top:22px;text-align:center;font-size:15px;line-height:1.8;color:#d9d5cc}
+.info strong{font-weight:600;color:#fff}
+.out{display:block;text-align:center;margin-top:16px;padding:15px;border:1px solid #3a3a3a;color:#e8e5de;text-decoration:none;font-size:12px;letter-spacing:.16em;text-transform:uppercase;border-radius:3px}
+footer{text-align:center;padding:56px 20px 110px}
+footer img{width:70px;opacity:.75}
+footer p{font-family:Cinzel,serif;font-size:10px;letter-spacing:.3em;color:#6d685f;margin-top:12px}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:9;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(10,10,10,0),rgba(10,10,10,.92) 35%);transform:translateY(110%);transition:transform .35s ease}
+.bar.on{transform:none}
+.bar a{display:flex;justify-content:center;max-width:528px;margin:0 auto;padding:13px;background:#25D366;color:#fff;text-decoration:none;border-radius:6px}
+.bar b{font-size:28px}
+.rate{display:inline-flex;align-items:center;gap:10px;margin-bottom:16px;padding:8px 14px 8px 12px;background:rgba(10,10,10,.55);border:1px solid rgba(255,255,255,.14);border-radius:40px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);text-decoration:none;color:#fff}
+.rate .n{font-family:Anton,Impact,sans-serif;font-size:22px;line-height:1;letter-spacing:.02em}
+.rate .st5{position:relative;display:inline-block;font-size:17px;line-height:1;letter-spacing:2px;color:#4a4a4a}
+.rate .st5 i{position:absolute;left:0;top:0;width:94%;overflow:hidden;white-space:nowrap;color:#FBBC04;font-style:normal}
+.rate .g{font-size:12px;font-weight:600;letter-spacing:.04em;color:#e8e5de;border-left:1px solid rgba(255,255,255,.2);padding-left:10px}
+@media(min-width:760px){h1{font-size:64px}.top img{width:140px}}
+.snd{position:absolute;z-index:2;top:22px;right:18px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(10,10,10,.5);display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.snd svg{width:22px;height:22px;fill:#fff}.snd .w{display:none}.snd.on .w{display:block}.snd.on .x{display:none}
+</style></head><body>
+
+<section class="hero">
+<video id="hv" autoplay muted loop playsinline preload="auto" poster="poster.jpg"><source src="hero.mp4" type="video/mp4"></video>
+<button class="snd" id="snd" aria-label="Activar sonido"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path class="x" d="M16 9l5 6M21 9l-5 6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg></button>
+<div class="top"><img src="logo.png" alt="La Guardería Auto House"></div>
+<div class="in">
+<a class="rate" href="https://maps.google.com/?q=La+Guarder%C3%ADa+Auto+House+Hip%C3%B3lito+Yrigoyen+3756+Mar+del+Plata" target="_blank" rel="noopener" aria-label="Calificación 4,7 de 5 en Google"><span class="n">4,7</span><span class="st5">★★★★★<i>★★★★★</i></span><span class="g">Reseñas en Google</span></a>
+<h1>Tu auto,<br>impecable.</h1>
+<p class="sub"><strong style="color:#fff;font-weight:600">Servicio de categoría.</strong> Hecho de principio a fin por una sola persona, de a un auto, con turno y al detalle.</p>
+<a class="cta" id="cta1" href="https://wa.me/542234557777?text=Hola%20Cristian%2C%20vi%20el%20anuncio%20y%20quiero%20reservar%20un%20turno%20de%20lavado" target="_blank" rel="noopener"><b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.03c-.24.68-1.42 1.32-1.96 1.37-.5.05-1.13.07-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36h.56c.18 0 .42-.07.66.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.1.2-.14.31-.29.48-.14.17-.3.38-.43.51-.14.14-.29.3-.13.59.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.42.29.14.46.12.63-.07.17-.2.72-.84.92-1.13.19-.29.38-.24.65-.14.27.1 1.69.8 1.98.94.29.14.48.22.55.34.07.12.07.7-.17 1.38z"/></svg>Reservar</b><small>Por WhatsApp · Te responde Cristian al instante</small></a>
+</div>
+</section>
+
+<div class="w">
+<div class="line"></div>
+<p class="kick">AUTO HOUSE</p>
+<h2>Servicios</h2>
+<div class="list">
+<div class="it">Lavado exterior e interior<span>Base</span></div>
+<div class="it">Encerado de carrocería<span>Adicional</span></div>
+<div class="it">Pulido de ópticas<span>Adicional</span></div>
+<div class="it">Lavado de motor<span>Adicional</span></div>
+</div>
+<div class="gal">
+<img src="g1.jpg" alt="Mustang recién lavado" loading="lazy">
+<img src="g2.jpg" alt="Lavado a presión" loading="lazy">
+<img src="g3.jpg" alt="Lavado de Jeep Wrangler" loading="lazy">
+<img src="g4.jpg" alt="Box de lavado" loading="lazy">
+</div>
+
+<div class="line"></div>
+<p class="kick">ASÍ TRABAJAMOS</p>
+<h2>Cada detalle cuenta</h2>
+<div class="vid"><video autoplay muted loop playsinline preload="metadata" poster="poster2.jpg"><source src="work.mp4" type="video/mp4"></video></div>
+
+<div class="line"></div>
+<p class="kick">EN 3 PASOS</p>
+<h2>Cómo reservar</h2>
+<div class="steps">
+<div class="st"><b>1</b><p>Tocás el botón y le escribís a Cristian por WhatsApp.</p></div>
+<div class="st"><b>2</b><p>Elegís el día y el horario que te quede cómodo.</p></div>
+<div class="st"><b>3</b><p>Traés tu auto y te lo devolvemos impecable.</p></div>
+</div>
+<a class="cta" href="https://wa.me/542234557777?text=Hola%20Cristian%2C%20vi%20el%20anuncio%20y%20quiero%20reservar%20un%20turno%20de%20lavado" target="_blank" rel="noopener"><b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.03c-.24.68-1.42 1.32-1.96 1.37-.5.05-1.13.07-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36h.56c.18 0 .42-.07.66.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.1.2-.14.31-.29.48-.14.17-.3.38-.43.51-.14.14-.29.3-.13.59.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.42.29.14.46.12.63-.07.17-.2.72-.84.92-1.13.19-.29.38-.24.65-.14.27.1 1.69.8 1.98.94.29.14.48.22.55.34.07.12.07.7-.17 1.38z"/></svg>Reservar</b><small>Turno por WhatsApp</small></a>
+
+<div class="line"></div>
+<p class="kick">MAR DEL PLATA</p>
+<h2>Dónde estamos</h2>
+<div class="info"><strong>Hipólito Yrigoyen 3756</strong><br>entre Matheu y Quintana<br><br>Lunes a viernes de 8 a 17<br>Sábados de 8 a 14</div>
+<a class="out" href="https://maps.google.com/?q=La+Guarder%C3%ADa+Auto+House+Hip%C3%B3lito+Yrigoyen+3756+Mar+del+Plata" target="_blank" rel="noopener">Cómo llegar</a>
+</div>
+
+<footer><img src="logo.png" alt=""><p>LA GUARDERÍA · AUTO HOUSE</p></footer>
+
+<div class="bar" id="bar"><a href="https://wa.me/542234557777?text=Hola%20Cristian%2C%20vi%20el%20anuncio%20y%20quiero%20reservar%20un%20turno%20de%20lavado" target="_blank" rel="noopener"><b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.03c-.24.68-1.42 1.32-1.96 1.37-.5.05-1.13.07-1.82-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36h.56c.18 0 .42-.07.66.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.1.2-.14.31-.29.48-.14.17-.3.38-.43.51-.14.14-.29.3-.13.59.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.42.29.14.46.12.63-.07.17-.2.72-.84.92-1.13.19-.29.38-.24.65-.14.27.1 1.69.8 1.98.94.29.14.48.22.55.34.07.12.07.7-.17 1.38z"/></svg>Reservar</b></a></div>
+<script>
+var c=document.getElementById('cta1'),b=document.getElementById('bar');
+if('IntersectionObserver' in window){new IntersectionObserver(function(e){b.classList.toggle('on',!e[0].isIntersecting)}).observe(c)}
+</script>
+<script>(function(){var hv=document.getElementById('hv'),sb=document.getElementById('snd');sb.onclick=function(){hv.muted=!hv.muted;if(!hv.muted){hv.volume=1;hv.play()}sb.classList.toggle('on',!hv.muted);sb.setAttribute('aria-label',hv.muted?'Activar sonido':'Silenciar')}})();</script>
+</body></html>
