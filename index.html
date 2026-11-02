@@ -14,13 +14,15 @@ html,body{background:#0a0a0a;height:100%}
 body{color:#e8e5de;font-family:Montserrat,Arial,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
 .s{position:relative;height:100svh;min-height:560px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
 .s video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.s:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(10,10,10,.35) 0%,rgba(10,10,10,.7) 70%),linear-gradient(180deg,rgba(10,10,10,.3),rgba(10,10,10,.85))}
+.s video.bg{display:none}
+@media (min-aspect-ratio:4/5){.s video.bg{display:block;filter:blur(28px) brightness(.75) saturate(1.2);transform:scale(1.15)}.s video#hv{object-fit:contain}}
+.s:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(10,10,10,.28) 0%,rgba(10,10,10,.12) 45%,rgba(10,10,10,.35) 100%),linear-gradient(180deg,rgba(10,10,10,.15) 0%,rgba(10,10,10,0) 30%,rgba(10,10,10,.05) 60%,rgba(10,10,10,.7) 100%)}
 .c{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;max-width:520px;opacity:0;transform:translateY(12px);animation:in 1.2s .2s ease forwards}
 @keyframes in{to{opacity:1;transform:none}}
 .logo{width:min(62vw,280px);height:auto;filter:drop-shadow(0 6px 24px rgba(0,0,0,.6))}
 .line{width:40px;height:1px;background:#c6a35a;margin:26px auto 18px}
-.slogan{font-family:Cinzel,serif;font-size:clamp(18px,5.2vw,26px);letter-spacing:.08em;color:#f4f1ea}
-.loc{font-size:11px;letter-spacing:.32em;color:#c6a35a;margin-top:12px;font-family:Cinzel,serif}
+.slogan{text-shadow:0 2px 12px rgba(0,0,0,.8);font-family:Cinzel,serif;font-size:clamp(18px,5.2vw,26px);letter-spacing:.08em;color:#f4f1ea}
+.loc{text-shadow:0 1px 3px rgba(0,0,0,.9),0 2px 12px rgba(0,0,0,.8);font-size:12px;font-weight:600;letter-spacing:.32em;color:#f0d79b;margin-top:12px;font-family:Cinzel,serif}
 .go{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:40px}
 .go a{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 10px;border:1px solid rgba(198,163,90,.55);border-radius:6px;color:#fff;text-decoration:none;background:rgba(10,10,10,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .25s,border-color .25s}
 .go a:hover{background:rgba(198,163,90,.15);border-color:#c6a35a}
@@ -34,8 +36,8 @@ body{color:#e8e5de;font-family:Montserrat,Arial,sans-serif;font-weight:300;-webk
 .snd svg{width:22px;height:22px;fill:#fff}.snd .w{display:none}.snd.on .w{display:block}.snd.on .x{display:none}
 </style></head><body>
 <section class="s">
+<video class="bg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="inicio.mp4" type="video/mp4"></video>
 <video id="hv" autoplay muted loop playsinline preload="auto" poster="poster.jpg"><source src="inicio.mp4" type="video/mp4"></video>
-<button class="snd" id="snd" aria-label="Activar sonido"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path class="x" d="M16 9l5 6M21 9l-5 6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg></button>
 <div class="c">
 <img class="logo" src="logo.png" alt="La Guardería">
 <div class="line"></div>
@@ -48,5 +50,4 @@ body{color:#e8e5de;font-family:Montserrat,Arial,sans-serif;font-weight:300;-webk
 </div>
 <a class="rate" href="https://maps.google.com/?q=La+Guarder%C3%ADa+Auto+House+Hip%C3%B3lito+Yrigoyen+3756+Mar+del+Plata" target="_blank" rel="noopener"><span class="n">4,7</span><span class="st">★★★★★<i>★★★★★</i></span>Reseñas en Google</a>
 </section>
-<script>(function(){var hv=document.getElementById('hv'),sb=document.getElementById('snd');sb.onclick=function(){hv.muted=!hv.muted;if(!hv.muted){hv.volume=1;hv.play()}sb.classList.toggle('on',!hv.muted);sb.setAttribute('aria-label',hv.muted?'Activar sonido':'Silenciar')}})();</script>
 </body></html>
