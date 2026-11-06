@@ -122,4 +122,7 @@ var c=document.getElementById('cta1'),b=document.getElementById('bar');
 if('IntersectionObserver' in window){new IntersectionObserver(function(e){b.classList.toggle('on',!e[0].isIntersecting)}).observe(c)}
 </script>
 <script>(function(){var hv=document.getElementById('hv'),sb=document.getElementById('snd');sb.onclick=function(){hv.muted=!hv.muted;if(!hv.muted){hv.volume=1;hv.play()}sb.classList.toggle('on',!hv.muted);sb.setAttribute('aria-label',hv.muted?'Activar sonido':'Silenciar')}})();</script>
+<script>(function(){var q=location.search,ad=/[?&](fbclid|utm_source=meta|utm_source=facebook|utm_source=instagram)/i.test(q);try{if(ad)sessionStorage.setItem('lg_ad','1');else if(sessionStorage.getItem('lg_ad'))ad=true}catch(e){}
+var t=ad?'Hola Cristian, vi el anuncio del encerado de regalo y quiero reservar un turno de lavado':'Hola Cristian, vi la web y quiero reservar un turno de lavado';
+document.querySelectorAll('a[href*="wa.me/542234557777"]').forEach(function(a){a.href='https://wa.me/542234557777?text='+encodeURIComponent(t)})})();</script>
 </body></html>
