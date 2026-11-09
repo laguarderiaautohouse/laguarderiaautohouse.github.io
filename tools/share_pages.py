@@ -9,7 +9,7 @@ Correr cada vez que cambia el stock de agencia/index.html:
 import html, json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE = (sys.argv[1] if len(sys.argv) > 1 else "https://laguarderiaautohouse.github.io").rstrip("/")
+BASE = (sys.argv[1] if len(sys.argv) > 1 else "https://autohouse.com.ar").rstrip("/")
 src = open(os.path.join(ROOT, "agencia", "index.html"), encoding="utf-8").read()
 cars = json.loads(re.search(r"var CARS=(\{.*?\});\n", src).group(1))
 
