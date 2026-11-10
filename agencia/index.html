@@ -103,6 +103,42 @@ footer p{font-family:Cinzel,serif;font-size:10px;letter-spacing:.3em;color:#6d68
 .info .ac{display:flex;gap:8px;margin-top:22px}
 .info .ac a{flex:1;text-align:center;padding:14px 8px;border-radius:4px;text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .shr{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:8px;padding:13px 8px;border-radius:4px;border:1px solid #333;background:transparent;color:#e8e5de;font-family:inherit;font-size:13px;font-weight:600;line-height:1;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}.shr svg{width:16px;height:16px;fill:currentColor}.shm{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.shm a,.shm button{padding:11px 4px;border-radius:4px;border:1px solid #333;background:#141414;color:#e8e5de;font-family:inherit;font-size:12px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;cursor:pointer}.shm[hidden]{display:none}
+
+/* Cotizá tu usado: formulario de una pantalla. No guarda ni envía datos: solo arma el mensaje de WhatsApp. */
+.cot{position:fixed;inset:0;z-index:120;background:#0a0a0a;display:none;overflow-y:auto;text-align:left}
+.cot.on{display:block}
+.cot .cx{position:fixed;top:12px;right:12px;z-index:3;width:44px;height:44px;border-radius:50%;border:1px solid #333;background:#141414;color:#fff;font-size:22px;cursor:pointer}
+.cot .box{max-width:520px;margin:0 auto;padding:64px 20px calc(32px + env(safe-area-inset-bottom))}
+.cot h2{text-align:left;font-size:30px;line-height:1.1}
+.cot .lead{font-size:16px;line-height:1.5;color:#d9d5cc;margin-top:10px}
+.cot .lb{display:block;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#c6a35a;margin:18px 0 7px}
+.cot .lb i{font-style:normal;font-weight:400;letter-spacing:0;text-transform:none;color:#8d887e}
+.cot input[type=text]{display:block;width:100%;padding:13px 14px;border-radius:6px;border:1px solid #333;background:#141414;color:#fff;font:400 17px Montserrat,Arial,sans-serif;-webkit-appearance:none;appearance:none}
+.cot input[type=text]::placeholder{color:#6f6b63}
+.cot input[type=text]:focus{outline:2px solid #c6a35a;outline-offset:1px}
+.cot input.bad{border-color:#e11d2a}
+.cot .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cot fieldset{border:0;min-width:0;margin-top:18px}.cot legend.lb{margin:0 0 8px;padding:0}
+.cot .seg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cot .seg label{position:relative;display:block}
+.cot .seg input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.cot .seg span{display:block;text-align:center;padding:14px 8px;border-radius:6px;border:1px solid #333;background:#141414;color:#e8e5de;font-weight:600;font-size:15px}
+.cot .seg input:checked+span{background:#e8e5de;color:#0a0a0a;border-color:#e8e5de}
+.cot .seg input:focus-visible+span{outline:2px solid #c6a35a;outline-offset:1px}
+.cot .seg.bad span{border-color:#e11d2a}
+.cot .ph{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cot .ph li{border:1px dashed #3a3a3a;border-radius:6px;padding:10px;font-size:14px;color:#d9d5cc;display:flex;align-items:center;gap:8px}
+.cot .ph li b{flex:none;width:22px;height:22px;border-radius:50%;background:#c6a35a;color:#0a0a0a;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.cot .hint{font-size:13px;line-height:1.5;color:#9a958b;margin-top:10px}
+.cot .chk{display:flex;align-items:flex-start;gap:12px;margin-top:22px;padding:14px;border:1px solid #2a2a2a;border-radius:6px;font-size:15px;line-height:1.4;color:#e8e5de;cursor:pointer}
+.cot .chk[hidden]{display:none}
+.cot .chk input{flex:none;width:22px;height:22px;margin-top:1px;accent-color:#c6a35a}
+.cot .err{color:#ff8a8a;font-size:14px;margin-top:16px;min-height:1.4em}
+.cot .go{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:8px;padding:17px 12px;border:0;border-radius:6px;background:#25D366;color:#fff;font-family:Anton,Impact,sans-serif;font-size:22px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;text-align:center;cursor:pointer}
+.cot .go svg{width:22px;height:22px;fill:#fff}
+.cot .alt{display:block;width:100%;margin-top:10px;padding:15px;border:1px solid #3a3a3a;border-radius:6px;background:transparent;color:#e8e5de;font:600 13px Montserrat,Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.cot [hidden]{display:none}
+.fc button.cotb{display:inline-flex;margin-top:16px;padding:12px 18px;border:0;border-radius:4px;background:#25D366;color:#fff;font:600 13px Montserrat,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
 </style></head><body>
 
 <section class="hero">
@@ -171,7 +207,7 @@ footer p{font-family:Cinzel,serif;font-size:10px;letter-spacing:.3em;color:#6d68
 <h2>Financiación y permutas</h2>
 <div class="feat">
 <div class="fc"><p class="kick">FINANCIACIÓN</p><h3>Banco Nación y Banco Provincia</h3><p>Te ayudamos con el crédito prendario para tu próximo auto. Consultanos y te contamos las opciones vigentes.</p><a href="https://wa.me/542234557777?text=Hola%2C%20quiero%20consultar%20por%20financiaci%C3%B3n%20para%20comprar%20un%20auto" target="_blank" rel="noopener">Consultar financiación</a></div>
-<div class="fc"><p class="kick">PERMUTAS</p><h3>Tomamos tu usado</h3><p>Mandanos fotos, año y kilómetros de tu auto y te lo cotizamos para entregarlo en parte de pago.</p><a href="https://wa.me/542234557777?text=Hola%2C%20quiero%20cotizar%20mi%20usado%20para%20entregarlo%20en%20parte%20de%20pago" target="_blank" rel="noopener">Cotizar mi usado</a></div>
+<div class="fc"><p class="kick">PERMUTAS</p><h3>Tomamos tu usado</h3><p>Contanos qué auto tenés y te lo cotizamos por WhatsApp.</p><a id="cotb" href="https://wa.me/5492236806606?text=Hola%2C%20quiero%20cotizar%20mi%20usado." target="_blank" rel="noopener">Cotizá tu usado</a></div>
 </div>
 
 <div class="line"></div>
@@ -200,9 +236,10 @@ m.innerHTML='<a href="https://wa.me/?text='+e(x+' '+u)+'" target="_blank" rel="n
 m.hidden=false;document.getElementById('cpy').onclick=function(){var b=this;function ok(){b.textContent='Link copiado'}if(navigator.clipboard)navigator.clipboard.writeText(u).then(ok,function(){prompt('Copiá el link:',u)});else prompt('Copiá el link:',u)}}
 (function(){var d=document.getElementById('dlg'),g=document.getElementById('gal'),inf=document.getElementById('inf'),cur=null,ix=0;
 function show(i){var f=cur.f;if(!f.length)return;ix=(i+f.length)%f.length;g.querySelector('.main img').src=f[ix];g.querySelector('.cnt').textContent=(ix+1)+' / '+f.length;g.querySelectorAll('.th img').forEach(function(t,k){t.classList.toggle('on',k===ix)})}
-function open(id){cur=CARS[id];if(!cur)return;var f=cur.f;
+function open(id){cur=CARS[id];if(!cur)return;window.LGCAR=id;var f=cur.f;
 g.innerHTML=f.length?'<div class="main"><img alt=""><span class="cnt"></span>'+(f.length>1?'<button class="nav l" aria-label="Anterior">‹</button><button class="nav r" aria-label="Siguiente">›</button>':'')+'</div><div class="th">'+f.map(function(s){return '<img src="'+s+'" alt="" loading="lazy">'}).join('')+'</div>':'';
-inf.innerHTML='<h2>'+cur.t+'</h2><p class="m">'+cur.m+'</p><div class="pr"><p class="lb">Precio de lista</p><p class="li">'+cur.li+'</p><div class="of"><span class="tag">OFERTA</span><span class="co">'+cur.co+'</span><span class="cl">Precio de contado</span></div><p class="nt">Financiación con Banco Nación y Banco Provincia. Los precios en dólares se pueden pagar en pesos al cambio del día. Tomamos tu usado.</p></div><div class="ac"><a class="ask" href="'+cur.wa+'" target="_blank" rel="noopener">Consultar</a>'+(cur.fb?'<a class="sec" href="'+cur.fb+'" target="_blank" rel="noopener">Ver en Marketplace</a>':'')+'</div><button class="shr" type="button" id="shr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16a3 3 0 0 0-2.4 1.2l-6.7-3.4a3 3 0 0 0 0-1.6l6.7-3.4A3 3 0 1 0 15 7l-6.7 3.4a3 3 0 1 0 0 3.2L15 17a3 3 0 1 0 3-1z"/></svg>Compartir este auto</button><div class="shm" id="shm" hidden></div>';
+inf.innerHTML='<h2>'+cur.t+'</h2><p class="m">'+cur.m+'</p><div class="pr"><p class="lb">Precio de lista</p><p class="li">'+cur.li+'</p><div class="of"><span class="tag">OFERTA</span><span class="co">'+cur.co+'</span><span class="cl">Precio de contado</span></div><p class="nt">Financiación con Banco Nación y Banco Provincia. Los precios en dólares se pueden pagar en pesos al cambio del día. Tomamos tu usado.</p></div><div class="ac"><a class="ask" href="'+cur.wa+'" target="_blank" rel="noopener">Consultar</a>'+(cur.fb?'<a class="sec" href="'+cur.fb+'" target="_blank" rel="noopener">Ver en Marketplace</a>':'')+'</div><button class="shr" type="button" id="shr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16a3 3 0 0 0-2.4 1.2l-6.7-3.4a3 3 0 0 0 0-1.6l6.7-3.4A3 3 0 1 0 15 7l-6.7 3.4a3 3 0 1 0 0 3.2L15 17a3 3 0 1 0 3-1z"/></svg>Compartir este auto</button><div class="shm" id="shm" hidden></div><button class="shr" type="button" id="cotc">Tomamos tu usado: cotizalo</button>';
+document.getElementById('cotc').onclick=function(){if(window.LGCOT)window.LGCOT(true)};
 document.getElementById('shr').onclick=function(){shareCar(id)};
 var l=g.querySelector('.nav.l'),r=g.querySelector('.nav.r');if(l){l.onclick=function(){show(ix-1)};r.onclick=function(){show(ix+1)}}
 g.querySelectorAll('.th img').forEach(function(t,k){t.onclick=function(){show(k)}});
@@ -215,6 +252,88 @@ window.addEventListener('popstate',function(){if(d.classList.contains('on'))clos
 document.addEventListener('keydown',function(e){if(!cur)return;if(e.key==='Escape')history.back();if(e.key==='ArrowRight')show(ix+1);if(e.key==='ArrowLeft')show(ix-1)});
 var sx=null;g.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});g.addEventListener('touchend',function(e){if(sx===null||!cur)return;var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>40)show(ix+(dx<0?1:-1));sx=null});
 if(location.hash&&CARS[location.hash.slice(1)]){var id=location.hash.slice(1);history.replaceState(null,'',location.pathname);open(id)}
+})();
+</script>
+<div class="cot" id="cot" role="dialog" aria-modal="true" aria-labelledby="cotT"><button class="cx" id="cotX" type="button" aria-label="Cerrar">×</button>
+<form class="box" id="cotF" novalidate autocomplete="off">
+<p class="kick">PERMUTAS</p>
+<h2 id="cotT">Cotizá tu usado</h2>
+<p class="lead">Contanos qué auto tenés y te lo cotizamos por WhatsApp.</p>
+<label class="lb" for="cMarca">Marca</label>
+<input type="text" id="cMarca" list="cMarcas" maxlength="30" placeholder="Ej.: Volkswagen" autocapitalize="words" enterkeyhint="next">
+<datalist id="cMarcas"><option>Audi<option>BMW<option>Chery<option>Chevrolet<option>Citroën<option>Dodge<option>Fiat<option>Ford<option>Honda<option>Hyundai<option>Jeep<option>Kia<option>Mercedes Benz<option>Mini<option>Mitsubishi<option>Nissan<option>Peugeot<option>Ram<option>Renault<option>Suzuki<option>Toyota<option>Volkswagen</datalist>
+<label class="lb" for="cModelo">Modelo</label>
+<input type="text" id="cModelo" maxlength="40" placeholder="Ej.: Amarok" autocapitalize="words" enterkeyhint="next">
+<label class="lb" for="cVersion">Versión <i>(si la sabés)</i></label>
+<input type="text" id="cVersion" maxlength="40" placeholder="Ej.: Highline 2.0 TDI 4x4" enterkeyhint="next">
+<div class="two">
+<div><label class="lb" for="cAnio">Año</label><input type="text" id="cAnio" inputmode="numeric" maxlength="4" placeholder="Ej.: 2018" enterkeyhint="next"></div>
+<div><label class="lb" for="cKm">Kilómetros</label><input type="text" id="cKm" inputmode="numeric" maxlength="9" placeholder="Ej.: 85.000" enterkeyhint="next"></div>
+</div>
+<fieldset><legend class="lb">Caja</legend><div class="seg" id="cCaja"><label><input type="radio" name="caja" value="manual"><span>Manual</span></label><label><input type="radio" name="caja" value="automática"><span>Automática</span></label></div></fieldset>
+<p class="lb">Fotos para mandar en el chat</p>
+<ul class="ph"><li><b>1</b>Frente</li><li><b>2</b>Costado</li><li><b>3</b>Interior</li><li><b>4</b>Tablero con los km</li></ul>
+<p class="hint">Con 2 alcanza, mejor las 4. Las adjuntás en WhatsApp apenas se abre el chat.</p>
+<label class="lb" for="cNombre">Tu nombre <i>(opcional)</i></label>
+<input type="text" id="cNombre" maxlength="40" autocapitalize="words" enterkeyhint="done">
+<label class="chk" id="cIntW" hidden><input type="checkbox" id="cInt" checked><span>Me interesa el <strong id="cCar"></strong></span></label>
+<p class="err" id="cErr" role="alert"></p>
+<button class="go" type="submit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2z"/></svg>Enviar por WhatsApp</button>
+<p class="hint">No te pedimos teléfono ni mail: nos escribís vos desde tu WhatsApp. La cotización te la pasamos después de ver el auto.</p>
+</form>
+<div class="box" id="cotD" hidden>
+<p class="kick">YA CASI</p>
+<h2>Mandá el mensaje y sumá las fotos</h2>
+<p class="lead">Se abrió WhatsApp con el mensaje armado. Tocá enviar y adjuntá en el mismo chat las fotos: frente, costado, interior y tablero con los km.</p>
+<a class="go" id="cotA" href="#" target="_blank" rel="noopener" style="margin-top:24px">Abrir WhatsApp de nuevo</a>
+<button class="alt" type="button" id="cotE">Corregir los datos</button>
+<button class="alt" type="button" id="cotB">Volver al stock</button>
+</div>
+</div>
+<script>
+(function(){
+var WA='5492236806606';
+var $=function(i){return document.getElementById(i)},d=$('cot'),f=$('cotF'),done=$('cotD'),dlg=$('dlg'),pushed=false,last=null;
+function clean(v,n){return String(v||'').replace(/[\u0000-\u001f\u007f]/g,' ').replace(/\s+/g,' ').trim().slice(0,n)}
+function carName(){var c=window.CARS&&window.LGCAR&&CARS[window.LGCAR];return c?c.t+' '+c.m.split(' · ')[0]:''}
+function km(v){var n=String(v).replace(/\D/g,'').replace(/^0+(?=\d)/,'');return n.replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+function msg(o){return 'Hola, quiero cotizar mi usado. '+[o.marca,o.modelo,o.version,o.anio].filter(Boolean).join(' ')+', '+o.km+' km, caja '+o.caja+'. Las fotos las mando acá abajo.'+(o.auto?' Me interesa el '+o.auto+'.':'')+(o.nombre?' Soy '+o.nombre+'.':'')}
+window.LGCOTMSG=msg;
+function open(fromCar){last=document.activeElement;var n=carName();
+$('cIntW').hidden=!n;$('cCar').textContent=n;$('cInt').checked=!!n;
+f.hidden=false;done.hidden=true;$('cErr').textContent='';
+d.classList.add('on');document.body.style.overflow='hidden';d.scrollTop=0;
+pushed=!dlg.classList.contains('on');if(pushed)history.pushState({cot:1},'');
+setTimeout(function(){$('cMarca').focus()},50)}
+function hide(){d.classList.remove('on');if(!dlg.classList.contains('on'))document.body.style.overflow='';if(last&&last.focus&&document.contains(last))last.focus()}
+function close(){if(!d.classList.contains('on'))return;if(pushed){pushed=false;history.back()}else hide()}
+window.LGCOT=open;
+var b=$('cotb');if(b)b.addEventListener('click',function(e){e.preventDefault();open(false)});
+$('cotX').onclick=close;$('cotB').onclick=close;
+$('cotE').onclick=function(){done.hidden=true;f.hidden=false;d.scrollTop=0};
+window.addEventListener('popstate',function(){if(d.classList.contains('on')){pushed=false;hide()}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&d.classList.contains('on')){e.stopPropagation();e.preventDefault();close()}},true);
+$('cKm').addEventListener('input',function(){this.value=km(this.value)});
+$('cAnio').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,4)});
+f.addEventListener('input',function(e){if(e.target.classList)e.target.classList.remove('bad');if(e.target.name==='caja')$('cCaja').classList.remove('bad');$('cErr').textContent=''});
+f.addEventListener('submit',function(e){e.preventDefault();
+var o={marca:clean($('cMarca').value,30),modelo:clean($('cModelo').value,40),version:clean($('cVersion').value,40),anio:clean($('cAnio').value,4),km:km($('cKm').value),nombre:clean($('cNombre').value,40)};
+var r=f.querySelector('input[name=caja]:checked');o.caja=r?r.value:'';
+var y=parseInt(o.anio,10),max=new Date().getFullYear()+1,bad=[];
+if(!o.marca)bad.push(['cMarca','la marca']);
+if(!o.modelo)bad.push(['cModelo','el modelo']);
+if(!(o.anio.length===4&&y>=1950&&y<=max))bad.push(['cAnio','el año']);
+if(!o.km)bad.push(['cKm','los kilómetros']);
+if(!o.caja)bad.push(['cCaja','la caja']);
+['cMarca','cModelo','cAnio','cKm','cCaja'].forEach(function(i){$(i).classList.remove('bad')});
+if(bad.length){bad.forEach(function(x){$(x[0]).classList.add('bad')});
+var t=bad.map(function(x){return x[1]});$('cErr').textContent='Falta '+(t.length>1?t.slice(0,-1).join(', ')+' y '+t[t.length-1]:t[0])+'.';
+var first=$(bad[0][0]);(first.querySelector('input')||first).focus();return}
+$('cErr').textContent='';
+o.auto=(!$('cIntW').hidden&&$('cInt').checked)?$('cCar').textContent:'';
+var u='https://wa.me/'+WA+'?text='+encodeURIComponent(msg(o));
+$('cotA').href=u;f.hidden=true;done.hidden=false;d.scrollTop=0;
+var w=null;try{w=window.open(u,'_blank')}catch(err){}if(w){try{w.opener=null}catch(err){}}else location.href=u});
 })();
 </script>
 </body></html>
