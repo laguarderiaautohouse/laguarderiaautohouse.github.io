@@ -144,7 +144,9 @@ function card(t,i){if(DATA&&DATA.rol==="lavador")return t.bloqueo?"":cardLav(t,i
 async function post(body){const j=await(await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({k:K},body))})).json();return j}
 async function setEstado(i,e,btn){const t=DATA.turnos[i];if(busy)return;busy=true;if(btn){btn.disabled=true;btn.textContent="…"}
   try{const j=await post({accion:"estado",id:t.id,estado:e});if(!j.ok)throw 0;t.estado=e;toast(e==="Cancelado"?"Turno cancelado":e==="Terminado"?"Terminado. Avisamos para que le escriban al cliente":"Marcado: "+e);
-    if(e==="Terminado")try{fetch("https://ntfy.sh/",{method:"POST",body:JSON.stringify({topic:NTFY,title:"Auto terminado: "+(t.auto||"")+" ("+t.hora+")",message:"Avisale al cliente desde la app del lavadero (botón Avisar que está listo). Lo terminó "+DATA.quien+".",tags:["white_check_mark"],priority:5})}).catch(()=>{})}catch(x){}
+    /* Avisos al celular del equipo: llegó el auto y auto listo (además de turno nuevo y cancelado). */
+    const AV={Recibido:["Llegó el auto: ","Lo recibió "+DATA.quien+".","oncoming_automobile",4],Terminado:["Auto listo: ","Avisale al cliente desde la app (botón Avisar que está listo). Lo terminó "+DATA.quien+".","white_check_mark",5],Listo:["Auto listo: ","Avisale al cliente desde la app (botón Avisar que está listo). Lo marcó "+DATA.quien+".","white_check_mark",5]}[e];
+    if(AV)try{fetch("https://ntfy.sh/",{method:"POST",body:JSON.stringify({topic:NTFY,title:AV[0]+(t.auto||"")+" ("+t.hora+")",message:AV[1],tags:[AV[2]],priority:AV[3]})}).catch(()=>{})}catch(x){}
     if(e==="Cancelado")try{fetch("https://ntfy.sh/",{method:"POST",body:JSON.stringify({topic:NTFY,title:"Turno cancelado: "+lbl(DAY).s+" "+t.hora,message:(t.auto||"")+" · lo canceló "+DATA.quien,tags:["x"]})}).catch(()=>{})}catch(x){}
   }catch(x){toast("No se pudo guardar. Probá de nuevo.")}busy=false;load(true)}
 
