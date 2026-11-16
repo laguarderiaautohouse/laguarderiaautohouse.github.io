@@ -35,13 +35,13 @@ header h1 small{display:block;font:600 11px var(--f);letter-spacing:.14em;color:
 .kpi span{font-size:11px;color:var(--mut)}
 .msg{color:var(--mut);text-align:center;padding:30px 10px}
 .t{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--blu);border-radius:12px;padding:12px 14px;margin-bottom:10px}
-.t.Recibido{border-left-color:var(--yel)}.t.Listo{border-left-color:var(--go)}.t.Entregado{border-left-color:#555;opacity:.75}
+.t.Recibido{border-left-color:var(--yel)}.t.Empezado{border-left-color:#37b6c9}.t.Listo,.t.Terminado{border-left-color:var(--go)}.t.Entregado{border-left-color:#555;opacity:.75}
 .t.Cancelado,.t.No.vino,.t.novino{border-left-color:var(--red);opacity:.6}.t.bloq{border-left-color:#333;opacity:.6}
 .th{display:flex;align-items:baseline;gap:10px}
 .th .h{font:400 26px var(--d);letter-spacing:.02em}
 .th .a{flex:1;min-width:0;font-weight:700;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pill{font:700 11px var(--f);letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:99px;background:#1f2a38;color:#9cc3ee;white-space:nowrap}
-.pill.Recibido{background:#3a3112;color:#f1cf62}.pill.Listo{background:#123a22;color:#6fdc9b}.pill.Entregado{background:#2a2a2a;color:#bbb}.pill.Cancelado,.pill.novino{background:#3a1712;color:#f19a8c}
+.pill.Recibido{background:#3a3112;color:#f1cf62}.pill.Empezado{background:#11323a;color:#7fd8e6}.pill.Listo,.pill.Terminado{background:#123a22;color:#6fdc9b}.pill.Entregado{background:#2a2a2a;color:#bbb}.pill.Cancelado,.pill.novino{background:#3a1712;color:#f19a8c}
 .det{margin:6px 0 0;color:var(--mut);font-size:13px}
 .det b{color:var(--fg);font-weight:600}
 .org{font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);border-radius:6px;padding:1px 5px;margin-left:4px;color:var(--mut)}
@@ -111,19 +111,29 @@ async function load(quiet){if(!K)return;if(!quiet)$("list").innerHTML='<p class=
 
 function render(){const L=lbl(DAY);$("dl").innerHTML=esc(L.t)+"<small>"+esc(L.s)+"</small>";
   const ts=(DATA&&DATA.turnos)||[];const act=ts.filter(t=>!t.bloqueo&&!/Cancelado|No vino/.test(t.estado));
-  const enc=act.filter(t=>/Recibido|Listo/.test(t.estado)).length,ent=act.filter(t=>t.estado==="Entregado").length,tot=act.reduce((a,t)=>a+num(t.total),0);
-  $("kpis").innerHTML=`<div class="kpi"><b>${act.length}</b><span>Turnos</span></div><div class="kpi"><b>${enc}</b><span>En curso</span></div><div class="kpi"><b>${ent}</b><span>Entregados</span></div><div class="kpi"><b style="font-size:17px">${money(tot)}</b><span>Del día</span></div>`;
+  const enc=act.filter(t=>/Recibido|Empezado/.test(t.estado)).length,ent=act.filter(t=>t.estado==="Entregado").length,tot=act.reduce((a,t)=>a+num(t.total),0);
+  const LAV=DATA&&DATA.rol==="lavador";$("fab").hidden=LAV;
+  if(LAV){const ter=act.filter(t=>/Terminado|Listo|Entregado/.test(t.estado)).length;$("kpis").style.gridTemplateColumns="repeat(3,1fr)";$("kpis").innerHTML=`<div class="kpi"><b>${act.length}</b><span>Turnos</span></div><div class="kpi"><b>${enc}</b><span>En curso</span></div><div class="kpi"><b>${ter}</b><span>Terminados</span></div>`}
+  else $("kpis").innerHTML=`<div class="kpi"><b>${act.length}</b><span>Turnos</span></div><div class="kpi"><b>${enc}</b><span>En curso</span></div><div class="kpi"><b>${ent}</b><span>Entregados</span></div><div class="kpi"><b style="font-size:17px">${money(tot)}</b><span>Del día</span></div>`;
   if(!ts.length){$("list").innerHTML='<p class="msg">No hay turnos este día.</p>';return}
   $("list").innerHTML=ts.map(card).join("")}
 
-function card(t,i){const e=t.estado,cls=e==="No vino"?"novino":e;
+function cardLav(t,i){const e=t.estado,cls=e==="No vino"?"novino":e;
+  let a="";if(e==="Agendado")a=`<button class="b p" data-e="Recibido" data-i="${i}">Recibido</button>`;
+  else if(e==="Recibido")a=`<button class="b p" data-e="Empezado" data-i="${i}">Empezado</button>`;
+  else if(e==="Empezado")a=`<button class="b g" data-e="Terminado" data-i="${i}">Terminado</button>`;
+  else if(/Terminado|Listo/.test(e))a=`<p class="det" style="margin:0">Le avisamos al cliente que está listo.</p>`;
+  return`<div class="t ${cls}"><div class="th"><span class="h">${esc(t.hora)}</span><span class="a">${esc(t.auto||t.titulo)} ${esc(t.patente)}</span><span class="pill ${cls}">${esc(e)}</span></div>
+  <p class="det">${t.cliente?`<b>${esc(t.cliente)}</b><br>`:""}${esc(t.servicio)}</p>${a?`<div class="acts">${a}</div>`:""}</div>`}
+function card(t,i){if(DATA&&DATA.rol==="lavador")return t.bloqueo?"":cardLav(t,i);const e=t.estado,cls=e==="No vino"?"novino":e;
   if(t.bloqueo)return`<div class="t bloq"><div class="th"><span class="h">${esc(t.hora)}</span><span class="a">Horario bloqueado</span></div></div>`;
   const org=/web/i.test(t.origen)?"Web":/equipo/i.test(t.origen)?"Equipo":/tablero/i.test(t.origen)?"Tablero":t.origen?"Bot":"";
   const pagado=/pagado|cobrado/i.test(t.pago);
   let a="";const wa=waNum(t.telefono);
   if(e==="Agendado")a=`<button class="b p" data-e="Recibido" data-i="${i}">Recibido</button><button class="b" data-e="No vino" data-i="${i}">No vino</button>`;
-  else if(e==="Recibido")a=`<button class="b g" data-e="Listo" data-i="${i}">Listo</button>`;
-  else if(e==="Listo")a=`${wa?`<a class="b wa" href="https://wa.me/${wa}?text=${encodeURIComponent("Hola "+first(t.cliente)+", tu "+(t.auto||"auto")+" ya está listo. Te esperamos en Hipólito Yrigoyen 3756.")}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none">Avisar que está listo</a>`:""}<button class="b p" data-e="Entregado" data-i="${i}">Entregado</button>`;
+  else if(e==="Recibido")a=`<button class="b p" data-e="Empezado" data-i="${i}">Empezado</button>`;
+  else if(e==="Empezado")a=`<button class="b g" data-e="Terminado" data-i="${i}">Terminado</button>`;
+  else if(e==="Listo"||e==="Terminado")a=`${wa?`<a class="b wa" href="https://wa.me/${wa}?text=${encodeURIComponent("Hola "+first(t.cliente)+", tu "+(t.auto||"auto")+" ya está listo. Te esperamos en Hipólito Yrigoyen 3756.")}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none">Avisar que está listo</a>`:""}<button class="b p" data-e="Entregado" data-i="${i}">Entregado</button>`;
   if(!pagado&&!/Cancelado|No vino/.test(e))a+=`<button class="b" data-pg="${i}">Cobrar</button>`;
   a+=`<button class="b s" data-m="${i}" aria-label="Más opciones">⋯</button>`;
   const more=`<div class="more" id="m${i}">${wa?`<a class="b wa" href="https://wa.me/${wa}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none">WhatsApp del cliente</a>`:""}${e!=="Agendado"?`<button class="b" data-e="Agendado" data-i="${i}">Volver a agendado</button>`:""}${!/Cancelado/.test(e)?`<button class="b" data-x="${i}">Cancelar turno</button>`:""}</div>`;
@@ -133,7 +143,8 @@ function card(t,i){const e=t.estado,cls=e==="No vino"?"novino":e;
 
 async function post(body){const j=await(await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({k:K},body))})).json();return j}
 async function setEstado(i,e,btn){const t=DATA.turnos[i];if(busy)return;busy=true;if(btn){btn.disabled=true;btn.textContent="…"}
-  try{const j=await post({accion:"estado",id:t.id,estado:e});if(!j.ok)throw 0;t.estado=e;toast(e==="Cancelado"?"Turno cancelado":"Marcado: "+e);
+  try{const j=await post({accion:"estado",id:t.id,estado:e});if(!j.ok)throw 0;t.estado=e;toast(e==="Cancelado"?"Turno cancelado":e==="Terminado"?"Terminado. Avisamos para que le escriban al cliente":"Marcado: "+e);
+    if(e==="Terminado")try{fetch("https://ntfy.sh/",{method:"POST",body:JSON.stringify({topic:NTFY,title:"Auto terminado: "+(t.auto||"")+" ("+t.hora+")",message:"Avisale al cliente desde la app del lavadero (botón Avisar que está listo). Lo terminó "+DATA.quien+".",tags:["white_check_mark"],priority:5})}).catch(()=>{})}catch(x){}
     if(e==="Cancelado")try{fetch("https://ntfy.sh/",{method:"POST",body:JSON.stringify({topic:NTFY,title:"Turno cancelado: "+lbl(DAY).s+" "+t.hora,message:(t.auto||"")+" · lo canceló "+DATA.quien,tags:["x"]})}).catch(()=>{})}catch(x){}
   }catch(x){toast("No se pudo guardar. Probá de nuevo.")}busy=false;load(true)}
 
