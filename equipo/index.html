@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lavadero">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico">
+<title>Auto Mío · Lavadero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#0a0a0a;--card:#141414;--line:#262626;--fg:#ece9e2;--mut:#8a857b;--gold:#c6a35a;--cream:#f4f1ea;--go:#17b455;--yel:#e6b422;--red:#e0533f;--blu:#4a90d9;
+  --f:Montserrat,Arial,sans-serif;--d:Anton,Impact,"Arial Narrow",sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:400 15px/1.4 var(--f);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+.w{max-width:560px;margin:0 auto;padding:calc(10px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
+header{display:flex;align-items:center;gap:10px;padding:6px 0 12px}
+header img{width:40px;height:auto}
+header h1{margin:0;font:400 22px/1 var(--d);letter-spacing:.03em;text-transform:uppercase;flex:1}
+header h1 small{display:block;font:600 11px var(--f);letter-spacing:.14em;color:var(--gold);margin-top:3px}
+.ico{width:42px;height:42px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);font-size:18px;cursor:pointer}
+.days{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.days .ico{flex:none}
+.days b{flex:1;text-align:center;font:400 24px var(--d);text-transform:uppercase;letter-spacing:.02em}
+.days b small{display:block;font:600 12px var(--f);color:var(--mut);letter-spacing:.06em;text-transform:none}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center}
+.kpi b{display:block;font:400 22px var(--d);letter-spacing:.02em}
+.kpi span{font-size:11px;color:var(--mut)}
+.msg{color:var(--mut);text-align:center;padding:30px 10px}
+.t{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--blu);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.t.Recibido{border-left-color:var(--yel)}.t.Listo{border-left-color:var(--go)}.t.Entregado{border-left-color:#555;opacity:.75}
+.t.Cancelado,.t.No.vino,.t.novino{border-left-color:var(--red);opacity:.6}.t.bloq{border-left-color:#333;opacity:.6}
+.th{display:flex;align-items:baseline;gap:10px}
+.th .h{font:400 26px var(--d);letter-spacing:.02em}
+.th .a{flex:1;min-width:0;font-weight:700;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{font:700 11px var(--f);letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:99px;background:#1f2a38;color:#9cc3ee;white-space:nowrap}
+.pill.Recibido{background:#3a3112;color:#f1cf62}.pill.Listo{background:#123a22;color:#6fdc9b}.pill.Entregado{background:#2a2a2a;color:#bbb}.pill.Cancelado,.pill.novino{background:#3a1712;color:#f19a8c}
+.det{margin:6px 0 0;color:var(--mut);font-size:13px}
+.det b{color:var(--fg);font-weight:600}
+.org{font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);border-radius:6px;padding:1px 5px;margin-left:4px;color:var(--mut)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.b{min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:#1d1d1d;color:var(--fg);font:700 13px var(--f);cursor:pointer;flex:1 1 auto}
+.b.p{background:var(--cream);color:#0a0a0a;border-color:var(--cream)}
+.b.g{background:var(--go);border-color:var(--go);color:#fff}
+.b.wa{background:#1f3b2a;border-color:#2f5c41;color:#8ff0b3}
+.b.s{flex:0 0 auto;min-width:44px;padding:0 12px;color:var(--mut)}
+.b:disabled{opacity:.5}
+.more{display:none;flex-wrap:wrap;gap:8px;margin-top:8px}
+.more.on{display:flex}
+.fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));min-height:56px;padding:0 22px;border-radius:99px;border:0;background:var(--gold);color:#0a0a0a;font:700 15px var(--f);box-shadow:0 6px 20px rgba(0,0,0,.5);cursor:pointer}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheet[hidden]{display:none}
+.sh{background:#111;border-top:1px solid var(--line);border-radius:18px 18px 0 0;width:100%;max-width:560px;max-height:92dvh;overflow:auto;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sh h2{margin:0 0 12px;font:400 24px var(--d);text-transform:uppercase}
+.sh label{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:12px 0 6px}
+.sh input,.sh select{width:100%;min-height:48px;border-radius:10px;border:1px solid var(--line);background:#1a1a1a;color:#fff;font:600 16px var(--f);padding:0 12px}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.slots button{min-height:44px;border-radius:8px;border:1px solid var(--line);background:#1a1a1a;color:#fff;font:400 17px var(--d);cursor:pointer}
+.slots button.on{background:var(--go);border-color:var(--go)}
+.slots button:disabled{opacity:.3;text-decoration:line-through}
+.err{color:#ff9282;min-height:1.2em;margin:10px 0 0}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom,0px));background:#222;border:1px solid #333;color:#fff;padding:10px 16px;border-radius:99px;font-weight:600;z-index:30}
+.toast[hidden]{display:none}
+.inst{background:#1a160b;border:1px solid #3a3013;color:#f1dfa8;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:13px}
+.inst b{color:#fff}
+.inst button{float:right;background:none;border:0;color:var(--mut);font-size:18px;cursor:pointer}
+</style>
+</head><body>
+<div class="w">
+  <header><img src="/logo.png" alt=""><h1>Lavadero<small id="who">AUTO MÍO · LA GUARDERÍA</small></h1><button class="ico" id="rf" aria-label="Actualizar">⟳</button></header>
+  <div id="inst" class="inst" hidden></div>
+  <div class="days"><button class="ico" id="prev" aria-label="Día anterior">‹</button><b id="dl">Hoy</b><button class="ico" id="next" aria-label="Día siguiente">›</button></div>
+  <div class="kpis" id="kpis"></div>
+  <div id="list"><p class="msg">Cargando turnos…</p></div>
+</div>
+<button class="fab" id="fab">+ Turno</button>
+<div class="sheet" id="sheet" hidden><div class="sh" id="sh"></div></div>
+<div class="toast" id="toast" hidden></div>
+<script>
+const API="https://script.google.com/macros/s/AKfycbwuoP5xBGYhc7bAyll4piJVT9dXwnm7_klG0iBX4fT_-veU94VXkJSjtgtvuQG-JT0MuA/exec";
+const NTFY="autohouse-turnos-f898cf71";
+const SERV=[["Lavado auto",50000],["Lavado SUV mediano",55000],["Lavado furgón",55000],["Lavado pick up o SUV grande",60000],["Lavado pick up full size",70000],["Lavado de motor",55000],["Limpieza de tapizados (desde)",180000],["Otro",0]];
+const DIAS=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const $=id=>document.getElementById(id);
+const esc=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const money=n=>"$"+Number(n||0).toLocaleString("es-AR");
+const K=new URLSearchParams(location.search).get("k")||"";
+let DAY=ymd(new Date()),DATA=null,busy=false,timer=null;
+
+function lbl(v){const x=new Date(v+"T12:00:00"),d=new Date();d.setHours(12,0,0,0);const k=Math.round((x-d)/864e5);
+  const s=DIAS[x.getDay()]+" "+x.getDate()+" "+MES[x.getMonth()];return{t:k===0?"Hoy":k===1?"Mañana":k===-1?"Ayer":DIAS[x.getDay()],s}}
+function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
+function num(s){return Number(String(s||"").replace(/[^\d]/g,""))||0}
+function first(n){return String(n||"").trim().split(/\s+/)[0]||""}
+function waNum(t){t=String(t||"").replace(/\D/g,"");if(t.length<10)return"";return "549"+t.slice(-10)}
+
+async function load(quiet){if(!K)return;if(!quiet)$("list").innerHTML='<p class="msg">Cargando turnos…</p>';
+  try{const j=await(await fetch(API+"?k="+encodeURIComponent(K)+"&dia="+DAY)).json();
+    if(!j.ok){$("list").innerHTML='<p class="msg">'+(j.error==="clave"?"Este link no es válido. Pedile el tuyo a Julián.":"No se pudo leer la agenda. Tocá ⟳.")+'</p>';return}
+    DATA=j;$("who").textContent="AUTO MÍO · "+j.quien.toUpperCase();render()}
+  catch(e){if(!quiet)$("list").innerHTML='<p class="msg">Sin conexión. Tocá ⟳ para reintentar.</p>'}}
+
+function render(){const L=lbl(DAY);$("dl").innerHTML=esc(L.t)+"<small>"+esc(L.s)+"</small>";
+  const ts=(DATA&&DATA.turnos)||[];const act=ts.filter(t=>!t.bloqueo&&!/Cancelado|No vino/.test(t.estado));
+  const enc=act.filter(t=>/Recibido|Listo/.test(t.estado)).length,ent=act.filter(t=>t.estado==="Entregado").length,tot=act.reduce((a,t)=>a+num(t.total),0);
+  $("kpis").innerHTML=`<div class="kpi"><b>${act.length}</b><span>Turnos</span></div><div class="kpi"><b>${enc}</b><span>En curso</span></div><div class="kpi"><b>${ent}</b><span>Entregados</span></div><div class="kpi"><b style="font-size:17px">${money(tot)}</b><span>Del día</span></div>`;
+  if(!ts.length){$("list").innerHTML='<p class="msg">No hay turnos este día.</p>';return}
+  $("list").innerHTML=ts.map(card).join("")}
+
+function card(t,i){const e=t.estado,cls=e==="No vino"?"novino":e;
+  if(t.bloqueo)return`<div class="t bloq"><div class="th"><span class="h">${esc(t.hora)}</span><span class="a">Horario bloqueado</span></div></div>`;
+  const org=/web/i.test(t.origen)?"Web":/equipo/i.test(t.origen)?"Equipo":/tablero/i.test(t.origen)?"Tablero":t.origen?"Bot":"";
+  const pagado=/pagado|cobrado/i.test(t.pago);
+  let a="";const wa=waNum(t.telefono);
+  if(e==="Agendado")a=`<button class="b p" data-e="Recibido" data-i="${i}">Recibido</button><button class="b" data-e="No vino" data-i="${i}">No vino</button>`;
+  else if(e==="Recibido")a=`<button class="b g" data-e="Listo" data-i="${i}">Listo</button>`;
+  else if(e==="Listo")a=`${wa?`<a class="b wa" href="https://wa.me/${wa}?text=${encodeURIComponent("Hola "+first(t.cliente)+", tu "+(t.auto||"auto")+" ya está listo. Te esperamos en Hipólito Yrigoyen 3756.")}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none">Avisar que está listo</a>`:""}<button class="b p" data-e="Entregado" data-i="${i}">Entregado</button>`;
+  if(!pagado&&!/Cancelado|No vino/.test(e))a+=`<button class="b" data-pg="${i}">Cobrar</button>`;
+  a+=`<button class="b s" data-m="${i}" aria-label="Más opciones">⋯</button>`;
+  const more=`<div class="more" id="m${i}">${wa?`<a class="b wa" href="https://wa.me/${wa}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none">WhatsApp del cliente</a>`:""}${e!=="Agendado"?`<button class="b" data-e="Agendado" data-i="${i}">Volver a agendado</button>`:""}${!/Cancelado/.test(e)?`<button class="b" data-x="${i}">Cancelar turno</button>`:""}</div>`;
+  return`<div class="t ${cls}"><div class="th"><span class="h">${esc(t.hora)}</span><span class="a">${esc(t.auto||t.titulo)} ${esc(t.patente)}</span><span class="pill ${cls}">${esc(e)}</span></div>
+  <p class="det">${t.cliente?`<b>${esc(t.cliente)}</b>`:""}${t.telefono?" · "+esc(t.telefono):""}<br>${esc(t.servicio)}${t.total?" · <b>"+esc(t.total)+"</b>":""}<br>Pago: ${esc(String(t.pago||"A definir").split("·")[0])}${org?`<span class="org">${org}</span>`:""}${t.estadoTxt&&e!=="Agendado"?`<br><span style="font-size:12px">${esc(t.estadoTxt)}</span>`:""}</p>
+  <div class="acts">${a}</div>${more}</div>`}
+
+async function post(body){const j=await(await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({k:K},body))})).json();return j}
+async function setEstado(i,e,btn){const t=DATA.turnos[i];if(busy)return;busy=true;if(btn){btn.disabled=true;btn.textContent="…"}
+  try{const j=await post({accion:"estado",id:t.id,estado:e});if(!j.ok)throw 0;t.estado=e;toast(e==="Cancelado"?"Turno cancelado":"Marcado: "+e);
+    if(e==="Cancelado")try{fetch("https://ntfy.sh/",{method:"POST",body:JSON.stringify({topic:NTFY,title:"Turno cancelado: "+lbl(DAY).s+" "+t.hora,message:(t.auto||"")+" · lo canceló "+DATA.quien,tags:["x"]})}).catch(()=>{})}catch(x){}
+  }catch(x){toast("No se pudo guardar. Probá de nuevo.")}busy=false;load(true)}
+
+$("list").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.e){setEstado(Number(b.dataset.i),b.dataset.e,b);return}
+  if(b.dataset.m){$("m"+b.dataset.m).classList.toggle("on");return}
+  if(b.dataset.x){if(!b.dataset.ok){b.dataset.ok=1;b.textContent="Tocá de nuevo para cancelar";b.style.background="#5a1d14";return}setEstado(Number(b.dataset.x),"Cancelado",b);return}
+  if(b.dataset.pg){cobrar(Number(b.dataset.pg));return}});
+
+function openSheet(h){$("sh").innerHTML=h;$("sheet").hidden=false}
+function closeSheet(){$("sheet").hidden=true}
+$("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet()});
+
+function cobrar(i){const t=DATA.turnos[i];openSheet(`<h2>Cobrar ${esc(t.hora)}</h2><p class="det">${esc(t.auto)} ${esc(t.patente)} · ${esc(t.total||"")}</p>
+  <div class="acts"><button class="b p" data-pago="Pagado efectivo">Efectivo</button><button class="b p" data-pago="Pagado transferencia">Transferencia</button><button class="b p" data-pago="Pagado Mercado Pago">Mercado Pago</button></div><div class="acts"><button class="b" id="cx">Cerrar</button></div>`);
+  $("cx").onclick=closeSheet;
+  $("sh").querySelectorAll("[data-pago]").forEach(b=>b.onclick=async()=>{b.disabled=true;try{const j=await post({accion:"pago",id:t.id,pago:b.dataset.pago});if(!j.ok)throw 0;toast(b.dataset.pago);closeSheet();load(true)}catch(x){b.disabled=false;toast("No se pudo guardar")}})}
+
+/* Turno nuevo cargado por el equipo */
+let NV={dia:DAY,hora:null};
+async function nuevo(){NV={dia:DAY,hora:null};
+  openSheet(`<h2>Turno nuevo</h2><label>Día</label><input type="date" id="nd" value="${DAY}" min="${ymd(new Date())}"><label>Horario <span id="nh" style="text-transform:none;letter-spacing:0"></span></label><div class="slots" id="ns"><p class="det">Buscando…</p></div>
+  <label>Auto (marca y modelo)</label><input id="na" autocomplete="off" placeholder="Toyota Hilux"><label>Patente</label><input id="np" autocomplete="off" autocapitalize="characters" placeholder="AB123CD">
+  <label>Cliente</label><input id="nc" autocomplete="off" autocapitalize="words" placeholder="Nombre y apellido"><label>WhatsApp</label><input id="nt" type="tel" inputmode="tel" placeholder="223 555 1234">
+  <label>Servicio</label><select id="nsv">${SERV.map((s,i)=>`<option value="${i}">${esc(s[0])}${s[1]?" · "+money(s[1]):""}</option>`).join("")}</select>
+  <label>Total</label><input id="npr" type="number" inputmode="numeric" value="${SERV[0][1]}"><label>Pago</label><select id="npg"><option>A definir</option><option>En el local</option><option>Pagado efectivo</option><option>Pagado transferencia</option><option>Pagado Mercado Pago</option></select>
+  <p class="err" id="ne"></p><div class="acts"><button class="b g" id="nok">Guardar turno</button><button class="b" id="ncx">Cancelar</button></div>`);
+  $("ncx").onclick=closeSheet;$("nsv").onchange=()=>{const p=SERV[$("nsv").value][1];if(p)$("npr").value=p};
+  $("nd").onchange=()=>{NV.dia=$("nd").value;NV.hora=null;slots()};slots();
+  $("nok").onclick=async()=>{const b=$("nok");const er=m=>{$("ne").textContent=m};
+    if(!NV.hora)return er("Elegí un horario.");if($("na").value.trim().length<2)return er("Poné el auto.");
+    b.disabled=true;b.textContent="Guardando…";
+    try{const j=await post({accion:"nuevo",fecha:NV.dia,hora:NV.hora,auto:$("na").value,patente:$("np").value,cliente:$("nc").value,telefono:$("nt").value,servicio:SERV[$("nsv").value][0],precio:$("npr").value,pago:$("npg").value});
+      if(!j.ok){b.disabled=false;b.textContent="Guardar turno";return er(j.error==="ocupado"?"Ese horario se ocupó recién. Elegí otro.":"No se pudo guardar. Probá de nuevo.")}
+      try{fetch("https://ntfy.sh/",{method:"POST",body:JSON.stringify({topic:NTFY,title:"Turno nuevo: "+lbl(NV.dia).s+" "+NV.hora,message:$("na").value+" · "+SERV[$("nsv").value][0]+" · cargado por "+DATA.quien,tags:["car"]})}).catch(()=>{})}catch(x){}
+      closeSheet();toast("Turno guardado");DAY=NV.dia;load()}catch(x){b.disabled=false;b.textContent="Guardar turno";er("Sin conexión. Probá de nuevo.")}}}
+function horas(d){const w=new Date(d+"T12:00:00").getDay();if(w===0)return[];const o=[];for(let h=8;h<=(w===6?13:16);h++)o.push(pad(h)+":00");return o}
+async function slots(){const d=NV.dia,box=$("ns");if(!box)return;const hs=horas(d);if(!hs.length){box.innerHTML='<p class="det">Domingo: cerrado.</p>';return}
+  box.innerHTML='<p class="det">Buscando…</p>';let oc={};try{const j=await(await fetch(API+"?fecha="+d)).json();oc=j.ocupados||{}}catch(e){}
+  if(NV.dia!==d)return;const now=new Date(),hoy=ymd(now)===d;
+  box.innerHTML=hs.map(h=>{const lib=!(oc[h]>=1)&&!(hoy&&Number(h.slice(0,2))<=now.getHours());return`<button type="button" data-h="${h}" ${lib?"":"disabled"}>${h.slice(0,2)}</button>`}).join("");
+  box.onclick=e=>{const b=e.target.closest("button");if(!b||b.disabled)return;NV.hora=b.dataset.h;box.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));$("nh").textContent="· "+NV.hora}}
+
+$("fab").onclick=()=>{if(DATA)nuevo()};
+$("rf").onclick=()=>load();
+$("prev").onclick=()=>{const d=new Date(DAY+"T12:00:00");d.setDate(d.getDate()-1);DAY=ymd(d);DATA&&(DATA.turnos=[]);load()};
+$("next").onclick=()=>{const d=new Date(DAY+"T12:00:00");d.setDate(d.getDate()+1);DAY=ymd(d);DATA&&(DATA.turnos=[]);load()};
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)load(true)});
+
+/* Cómo ponerlo en el inicio del celu (solo la primera vez, fuera de la app instalada) */
+(function(){const st=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone;let visto=false;try{visto=localStorage.getItem("lg_inst")==="1"}catch(e){}
+  if(st||visto||!K)return;const ios=/iPhone|iPad|iPod/.test(navigator.userAgent);const i=$("inst");
+  i.innerHTML=`<button aria-label="Cerrar" id="ix">×</button><b>Ponelo en el inicio del celu:</b><br>${ios?"En Safari tocá <b>Compartir</b> (el cuadrado con flecha) y después <b>Agregar a inicio</b>.":"Tocá los <b>tres puntos</b> de Chrome y después <b>Agregar a la pantalla principal</b> (o Instalar app)."}`;i.hidden=false;
+  $("ix").onclick=()=>{i.hidden=true;try{localStorage.setItem("lg_inst","1")}catch(e){}}})();
+
+if(!K){$("list").innerHTML='<p class="msg">Para entrar necesitás tu link personal. Pedíselo a Julián.</p>';$("fab").hidden=true}
+else{load();timer=setInterval(()=>{if(!document.hidden&&$("sheet").hidden)load(true)},60000)}
+</script>
+</body></html>
