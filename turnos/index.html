@@ -240,7 +240,9 @@ async function agendar(b){b.disabled=true;b.textContent="Reservando…";
   const fail=m=>{b.disabled=false;b.textContent="Agendar";$("err").textContent=m};
   try{if(API){const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data)});const j=await r.json();
       if(!j.ok){if(j.error==="espera"){fail("Ya sacaste un turno recién. Si necesitás otro, esperá unos minutos o pedile ayuda al asesor.");return}if(j.error==="ocupado"){S.slot=null;S.note="Justo se ocupó ese horario. Elegí otro.";loadSlots(S.day);go("hora")}else fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.");return}}
-    party(data)}catch(err){fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.")}}
+    avisar(data);party(data)}catch(err){fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.")}}
+/* Aviso al celular del equipo (app ntfy). Sale desde el navegador del cliente, sin esperar respuesta, y sin datos personales (ni nombre, ni teléfono, ni patente). */
+function avisar(d){if(!API)return;try{fetch("https://ntfy.sh/",{method:"POST",keepalive:true,body:JSON.stringify({topic:"autohouse-turnos-f898cf71",title:"Turno nuevo: "+fmtDay(d.fecha)+" "+d.hora,message:d.auto+" · "+d.servicio+" · "+money(d.precio)+" · "+d.pago,tags:["car"],priority:4})}).catch(()=>{})}catch(e){}}
 function party(d){const p=$("party");const cols=["#ffffff","#0d7a3a","#c6a35a","#0a0a0a"];let conf="";for(let i=0;i<40;i++)conf+=`<i class="conf" style="left:${Math.random()*100}%;background:${cols[i%4]};animation-duration:${1.6+Math.random()*1.6}s;animation-delay:${Math.random()*.6}s"></i>`;
   let first=true;const base=d.base;const draw=()=>{const link=PAGOS[base];let pay="";
   if(S.pago==="mp")pay=link?`<a class="pay" href="${link}" target="_blank" rel="noopener">Pagar ${money(base)}</a>${d.adic.length?`<p class="addr">Los adicionales se pagan en el local.</p>`:""}`:`<p>El pago online todavía no está conectado: se paga en el local.</p>`;
