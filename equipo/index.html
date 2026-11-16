@@ -103,11 +103,19 @@ function num(s){return Number(String(s||"").replace(/[^\d]/g,""))||0}
 function first(n){return String(n||"").trim().split(/\s+/)[0]||""}
 function waNum(t){t=String(t||"").replace(/\D/g,"");if(t.length<10)return"";return "549"+t.slice(-10)}
 
-async function load(quiet){if(!K)return;if(!quiet)$("list").innerHTML='<p class="msg">Cargando turnos…</p>';
-  try{const j=await(await fetch(API+"?k="+encodeURIComponent(K)+"&dia="+DAY)).json();
-    if(!j.ok){$("list").innerHTML='<p class="msg">'+(j.error==="clave"?"Este link no es válido. Pedile el tuyo a Julián.":"No se pudo leer la agenda. Tocá ⟳.")+'</p>';return}
-    DATA=j;$("who").textContent="AUTO MÍO · "+j.quien.toUpperCase();render()}
-  catch(e){if(!quiet)$("list").innerHTML='<p class="msg">Sin conexión. Tocá ⟳ para reintentar.</p>'}}
+/* Agenda: se muestra al instante lo último guardado en el celu y se actualiza por detrás. */
+const MEM={};let PEND=0;
+function cKey(d){return "lg_eq_"+K+"_"+d}
+function getC(d){if(MEM[d])return MEM[d];try{const x=JSON.parse(localStorage.getItem(cKey(d))||"null");if(x)MEM[d]=x;return x}catch(e){return null}}
+function putC(d,j){MEM[d]=j;try{localStorage.setItem(cKey(d),JSON.stringify(j))}catch(e){}}
+async function fetchDia(d){const j=await(await fetch(API+"?k="+encodeURIComponent(K)+"&dia="+d)).json();if(j.ok)putC(d,j);return j}
+function vecinos(){[-1,1].forEach(n=>{const x=new Date(DAY+"T12:00:00");x.setDate(x.getDate()+n);const d=ymd(x);if(!MEM[d])fetchDia(d).catch(()=>{})})}
+async function load(quiet){if(!K)return;const d=DAY,c=getC(d);
+  if(c){DATA=c;$("who").textContent="AUTO MÍO · "+c.quien.toUpperCase();render()}else if(!quiet)$("list").innerHTML='<p class="msg">Cargando turnos…</p>';
+  try{const j=await fetchDia(d);if(d!==DAY)return;
+    if(!j.ok){if(!c)$("list").innerHTML='<p class="msg">'+(j.error==="clave"?"Este link no es válido. Pedile el tuyo a Julián.":"No se pudo leer la agenda. Tocá ⟳.")+'</p>';return}
+    if(PEND)return;DATA=j;$("who").textContent="AUTO MÍO · "+j.quien.toUpperCase();render();vecinos()}
+  catch(e){if(!c&&!quiet)$("list").innerHTML='<p class="msg">Sin conexión. Tocá ⟳ para reintentar.</p>'}}
 
 function render(){const L=lbl(DAY);$("dl").innerHTML=esc(L.t)+"<small>"+esc(L.s)+"</small>";
   const ts=(DATA&&DATA.turnos)||[];const act=ts.filter(t=>!t.bloqueo&&!/Cancelado|No vino/.test(t.estado));
@@ -142,13 +150,16 @@ function card(t,i){if(DATA&&DATA.rol==="lavador")return t.bloqueo?"":cardLav(t,i
   <div class="acts">${a}</div>${more}</div>`}
 
 async function post(body){const j=await(await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({k:K},body))})).json();return j}
-async function setEstado(i,e,btn){const t=DATA.turnos[i];if(busy)return;busy=true;if(btn){btn.disabled=true;btn.textContent="…"}
-  try{const j=await post({accion:"estado",id:t.id,estado:e});if(!j.ok)throw 0;t.estado=e;toast(e==="Cancelado"?"Turno cancelado":e==="Terminado"?"Terminado. Avisamos para que le escriban al cliente":"Marcado: "+e);
-    /* Avisos al celular del equipo: llegó el auto y auto listo (además de turno nuevo y cancelado). */
-    const AV={Recibido:["Llegó el auto: ","Lo recibió "+DATA.quien+".","oncoming_automobile",4],Terminado:["Auto listo: ","Avisale al cliente desde la app (botón Avisar que está listo). Lo terminó "+DATA.quien+".","white_check_mark",5],Listo:["Auto listo: ","Avisale al cliente desde la app (botón Avisar que está listo). Lo marcó "+DATA.quien+".","white_check_mark",5]}[e];
-    if(AV)try{fetch("https://ntfy.sh/",{method:"POST",body:JSON.stringify({topic:NTFY,title:AV[0]+(t.auto||"")+" ("+t.hora+")",message:AV[1],tags:[AV[2]],priority:AV[3]})}).catch(()=>{})}catch(x){}
-    if(e==="Cancelado")try{fetch("https://ntfy.sh/",{method:"POST",body:JSON.stringify({topic:NTFY,title:"Turno cancelado: "+lbl(DAY).s+" "+t.hora,message:(t.auto||"")+" · lo canceló "+DATA.quien,tags:["x"]})}).catch(()=>{})}catch(x){}
-  }catch(x){toast("No se pudo guardar. Probá de nuevo.")}busy=false;load(true)}
+/* El cambio se ve en el momento; se guarda por detrás y, si falla, vuelve atrás y avisa. */
+function hhmm(){const n=new Date();return pad(n.getHours())+":"+pad(n.getMinutes())}
+async function setEstado(i,e,btn){const t=DATA.turnos[i],d=DAY,prev=[t.estado,t.estadoTxt];
+  t.estado=e;t.estadoTxt=e+" · "+hhmm()+" · "+DATA.quien;putC(d,DATA);render();
+  toast(e==="Cancelado"?"Turno cancelado":e==="Terminado"?"Terminado. Le avisamos al equipo":"Marcado: "+e);
+  /* Avisos al celular del equipo: llegó el auto, auto listo y cancelado (el turno nuevo avisa desde la web). */
+  const AV={Recibido:["Llegó el auto: ","Lo recibió "+DATA.quien+".","oncoming_automobile",4],Terminado:["Auto listo: ","Avisale al cliente desde la app (botón Avisar que está listo). Lo terminó "+DATA.quien+".","white_check_mark",5],Listo:["Auto listo: ","Avisale al cliente desde la app (botón Avisar que está listo). Lo marcó "+DATA.quien+".","white_check_mark",5],Cancelado:["Turno cancelado: ","Lo canceló "+DATA.quien+". El horario quedó libre.","x",4]}[e];
+  if(AV)try{fetch("https://ntfy.sh/",{method:"POST",body:JSON.stringify({topic:NTFY,title:AV[0]+(t.auto||"")+" ("+lbl(d).s+" "+t.hora+")",message:AV[1],tags:[AV[2]],priority:AV[3]})}).catch(()=>{})}catch(x){}
+  PEND++;let ok=false;try{const j=await post({accion:"estado",id:t.id,estado:e});ok=!!j.ok}catch(x){}
+  PEND--;if(!ok){t.estado=prev[0];t.estadoTxt=prev[1];putC(d,DATA);if(d===DAY)render();toast("No se pudo guardar "+e+". Probá de nuevo.")}}
 
 $("list").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
   if(b.dataset.e){setEstado(Number(b.dataset.i),b.dataset.e,b);return}
@@ -163,7 +174,9 @@ $("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet()});
 function cobrar(i){const t=DATA.turnos[i];openSheet(`<h2>Cobrar ${esc(t.hora)}</h2><p class="det">${esc(t.auto)} ${esc(t.patente)} · ${esc(t.total||"")}</p>
   <div class="acts"><button class="b p" data-pago="Pagado efectivo">Efectivo</button><button class="b p" data-pago="Pagado transferencia">Transferencia</button><button class="b p" data-pago="Pagado Mercado Pago">Mercado Pago</button></div><div class="acts"><button class="b" id="cx">Cerrar</button></div>`);
   $("cx").onclick=closeSheet;
-  $("sh").querySelectorAll("[data-pago]").forEach(b=>b.onclick=async()=>{b.disabled=true;try{const j=await post({accion:"pago",id:t.id,pago:b.dataset.pago});if(!j.ok)throw 0;toast(b.dataset.pago);closeSheet();load(true)}catch(x){b.disabled=false;toast("No se pudo guardar")}})}
+  $("sh").querySelectorAll("[data-pago]").forEach(b=>b.onclick=async()=>{const prev=t.pago,d=DAY;t.pago=b.dataset.pago+" · "+hhmm()+" · "+DATA.quien;putC(d,DATA);closeSheet();render();toast(b.dataset.pago);
+    PEND++;let ok=false;try{const j=await post({accion:"pago",id:t.id,pago:b.dataset.pago});ok=!!j.ok}catch(x){}
+    PEND--;if(!ok){t.pago=prev;putC(d,DATA);if(d===DAY)render();toast("No se pudo guardar el cobro. Probá de nuevo.")}})}
 
 /* Turno nuevo cargado por el equipo */
 let NV={dia:DAY,hora:null};
@@ -192,8 +205,8 @@ async function slots(){const d=NV.dia,box=$("ns");if(!box)return;const hs=horas(
 
 $("fab").onclick=()=>{if(DATA)nuevo()};
 $("rf").onclick=()=>load();
-$("prev").onclick=()=>{const d=new Date(DAY+"T12:00:00");d.setDate(d.getDate()-1);DAY=ymd(d);DATA&&(DATA.turnos=[]);load()};
-$("next").onclick=()=>{const d=new Date(DAY+"T12:00:00");d.setDate(d.getDate()+1);DAY=ymd(d);DATA&&(DATA.turnos=[]);load()};
+$("prev").onclick=()=>{const d=new Date(DAY+"T12:00:00");d.setDate(d.getDate()-1);DAY=ymd(d);if(!getC(DAY)&&DATA)DATA=Object.assign({},DATA,{turnos:[]});load()};
+$("next").onclick=()=>{const d=new Date(DAY+"T12:00:00");d.setDate(d.getDate()+1);DAY=ymd(d);if(!getC(DAY)&&DATA)DATA=Object.assign({},DATA,{turnos:[]});load()};
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)load(true)});
 
 /* Cómo ponerlo en el inicio del celu (solo la primera vez, fuera de la app instalada) */
