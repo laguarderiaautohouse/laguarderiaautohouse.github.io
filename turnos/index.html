@@ -1,0 +1,255 @@
+<!doctype html><html lang="es"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Reservá tu lavado | La Guardería Auto House</title>
+<meta name="description" content="Sacá tu turno de lavado en La Guardería Auto House, Mar del Plata. Elegí día y horario online.">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Cinzel:wght@500&family=Montserrat:wght@300;400;600&display=swap">
+<style>
+/* Layout: una pregunta por pantalla, con la estética de la web de La Guardería (fondo negro, crema y dorado, Anton + Montserrat + Cinzel). Arriba logo, "atrás" y barra de avance; en el medio la pregunta con renglones grandes; al elegir, el renglón se pone verde, aparece una felicitación y pasa a la pantalla siguiente. */
+:root{
+  --bg:#0a0a0a; --panel:#151515; --line:#2c2c2c; --fg:#e8e5de; --mut:#8a857b;
+  --cream:#f4f1ea; --gold:#c6a35a; --go:#17b455; --soft:#0f2417; --off:#4d4a45; --err:#ff9282;
+  --f-body:Montserrat,Arial,sans-serif;
+  --f-disp:Anton,Impact,"Arial Narrow",sans-serif;
+  --f-kick:Cinzel,Georgia,serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--fg);font:400 17px/1.45 var(--f-body);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+.wrap{max-width:480px;min-height:100dvh;margin:0 auto;display:flex;flex-direction:column;padding:14px max(22px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(22px,env(safe-area-inset-left,0px))}
+.logo{display:block;width:86px;height:auto;margin:0 auto 10px}
+.top{display:flex;align-items:center;gap:12px;min-height:44px}
+.back{width:44px;height:44px;flex:none;border:1px solid var(--line);border-radius:3px;background:transparent;color:var(--fg);font-size:22px;cursor:pointer}
+.back[hidden]{display:block!important;visibility:hidden}
+.prog{flex:1;height:2px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .35s}
+.demo{font:500 10px var(--f-kick);letter-spacing:.2em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);border-radius:3px;padding:3px 7px;flex:none}
+#stage{flex:1;padding-top:26px;animation:in .3s both}
+#stage.dim{opacity:.1;transition:opacity .15s}
+.kick{font:500 11px var(--f-kick);letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+h1{font:400 40px/1.04 var(--f-disp);text-transform:uppercase;letter-spacing:.01em;color:#fff;margin:0 0 22px;text-wrap:balance}
+h1 span{color:var(--gold)}
+.opts{display:grid;gap:10px}
+.opt{width:100%;min-height:72px;padding:10px 20px;border-radius:3px;border:1px solid #3a3a3a;background:transparent;color:var(--fg);font:600 18px var(--f-body);text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.opt b{font:400 21px var(--f-disp);letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap;color:#fff}
+.opt small{display:block;font-size:13px;font-weight:400;color:var(--mut)}
+.opt.ok,.slots button.ok{background:var(--go);border-color:var(--go);color:#fff}
+.opt.ok small{color:#fff}
+.opt.add{min-height:60px;font-size:16px}
+.opt.add b{font:400 12px var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.opt.add b.p{font:400 19px var(--f-disp);letter-spacing:.02em;color:#fff;text-transform:none}
+.opt.add.ok b{color:#fff}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.slots button{min-height:72px;border-radius:3px;border:1px solid #3a3a3a;background:transparent;color:#fff;font:400 25px var(--f-disp);letter-spacing:.03em;font-variant-numeric:tabular-nums;cursor:pointer}
+.slots button:disabled{border-color:#1c1c1c;color:var(--off);text-decoration:line-through;cursor:default}
+.link{display:inline-block;margin-top:18px;padding:10px 0;border:0;background:none;color:var(--fg);font:400 12px var(--f-body);letter-spacing:.16em;text-transform:uppercase;text-decoration:underline;text-underline-offset:5px;cursor:pointer}
+.msg{color:var(--mut);margin:0}
+input.t{width:100%;min-height:66px;padding:10px 18px;border-radius:3px;border:1px solid #3a3a3a;background:var(--panel);color:#fff;font:600 21px var(--f-body);letter-spacing:0;text-transform:none}
+input.t::placeholder{color:#5f5b54;font-weight:300}
+input.t.ok{border-color:var(--go);background:var(--soft)}
+input:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.ff{display:grid;gap:14px}
+.ff label{display:grid;gap:7px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+.ff .err,.ff .cta{margin-top:0}
+.hint{color:#6fdc9b;font-weight:600;margin:0}.hint:empty{display:none}
+.cta{width:100%;min-height:62px;margin-top:14px;border:0;border-radius:3px;background:var(--cream);color:#0a0a0a;font:600 16px var(--f-body);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.cta.g{background:var(--go);color:#fff;min-height:68px;font-size:18px}
+.cta:disabled{opacity:.5}
+.err{color:var(--err);font-size:15px;margin:12px 0 0;min-height:1.3em}
+.sumc{border:1px solid var(--line);border-radius:3px;padding:16px 20px;line-height:1.6;font-size:15px;margin-bottom:22px}
+.sumc b{display:block;font:400 30px var(--f-disp);color:#fff;letter-spacing:.02em}
+.sumc .tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.sumc .tot span{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+.fine{font-size:12px;color:var(--mut);margin:14px 0 0}
+.wa{display:block;text-align:center;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);text-decoration:underline;text-underline-offset:4px;padding:16px 6px 0}
+.hp{position:absolute;left:-9999px}
+.cheer{position:fixed;inset:0;z-index:10;display:grid;place-items:center;pointer-events:none}
+.cheer[hidden]{display:none}
+.cheer div{display:flex;flex-direction:column;align-items:center;gap:12px;font:400 42px var(--f-disp);text-transform:uppercase;color:var(--go);animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+.cheer i{font-style:normal;width:84px;height:84px;border-radius:50%;background:var(--go);color:#fff;display:grid;place-items:center;font-size:50px}
+.cheer small{font:600 19px var(--f-body);text-transform:none;color:#fff;text-align:center;padding:0 24px;max-width:420px}
+@keyframes in{from{opacity:0;transform:translateX(24px)}}
+/* festejo: verde que se atenúa al negro de la web */
+.party{position:fixed;inset:0;z-index:20;background:var(--bg);color:var(--fg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;overflow:auto}
+.party::before{content:"";position:absolute;inset:0;background:var(--go);pointer-events:none;animation:fadeG 1.4s 1.3s both}
+.party>*:not(.conf){position:relative;z-index:1}
+.party h3{font:400 46px/1 var(--f-disp);text-transform:uppercase;color:#fff;margin:0;animation:near .9s cubic-bezier(.2,.9,.3,1) both}
+.party p{margin:0;font-size:16px;max-width:380px}
+.party .card{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:3px;padding:16px 22px;font-size:16px;line-height:1.5;animation:near .9s .25s both,cardC 1.4s 1.3s both}
+.party .card b{font:400 27px var(--f-disp);letter-spacing:.02em;display:block;color:#fff;animation:cardB 1.4s 1.3s both}
+.tick{width:76px;height:76px;border-radius:50%;background:var(--go);color:#fff;display:grid;place-items:center;font-size:48px;font-weight:900;animation:pop .5s cubic-bezier(.2,1.6,.4,1),tickC 1.4s 1.3s both}
+.party button,.party a.pay{min-height:52px;padding:0 26px;border-radius:3px;border:1px solid currentColor;background:transparent;color:inherit;font:600 13px var(--f-body);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
+.party a.pay{background:var(--cream);color:#0a0a0a;border-color:transparent;min-height:58px}
+.party a.go{min-width:220px;justify-content:center;font:400 28px var(--f-disp);letter-spacing:.1em}
+.party .addr{font-size:14px;color:var(--fg);margin-top:-6px}
+.party.still,.party.still *{animation:none!important}.party.still::before{display:none}
+.conf{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:fall linear forwards}
+@keyframes fadeG{to{opacity:0}}
+@keyframes cardC{from{background:#fff;color:#111;border-color:#fff}}
+@keyframes cardB{from{color:#111}}
+@keyframes tickC{from{background:#fff;color:var(--go)}}
+@keyframes pop{from{transform:scale(0)}}
+@keyframes near{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+@media (prefers-reduced-motion:reduce){#stage,.cheer div,.party,.party *{animation:none!important}.party::before{display:none}}
+</style>
+
+<div class="wrap">
+  <img class="logo" src="/logo.png" alt="La Guardería Auto House">
+  <div class="top">
+    <button class="back" id="back" type="button" aria-label="Volver" hidden>‹</button>
+    <div class="prog" role="progressbar" aria-label="Avance"><i id="bar"></i></div>
+    <span class="demo" id="demo" hidden>Prueba</span>
+  </div>
+  <div id="stage"></div>
+  <a class="wa" id="mWa" href="https://wa.me/5492234557777" target="_blank" rel="noopener">Prefiero que me ayude un asesor</a>
+  <input class="hp" id="web" tabindex="-1" autocomplete="off" aria-hidden="true">
+</div>
+<div class="cheer" id="cheer" hidden></div>
+<div id="party" hidden></div>
+
+<script>
+/* Dirección de la web app de Google Apps Script. Vacía = modo prueba. */
+const API="https://script.google.com/macros/s/AKfycbwuoP5xBGYhc7bAyll4piJVT9dXwnm7_klG0iBX4fT_-veU94VXkJSjtgtvuQG-JT0MuA/exec";
+/* Links de cobro de Mercado Pago, uno por importe del lavado (45000, 50000, 55000 y 60000), por ejemplo {45000:"https://mpago.la/..."}. El motor agregado se paga en el local. Vacío = pago online sin conectar. */
+const PAGOS={50000:"https://mpago.la/2BfG5Vi",55000:"https://mpago.la/19frheH",60000:"https://mpago.la/2ar4Uhj",70000:"https://mpago.la/1Vozsbg"};
+const WA="5492234557777";
+/* Adicionales del último paso. Precio 0 = se cotiza en el local y no suma al total. */
+/* [nombre, precio, texto opcional]. Precio 0 = no suma al total. */
+const ADIC=[["Lavado de motor",55000],["Encerado de carrocería",0,()=>{const d=new Date(S.day+"T12:00:00");return d<new Date("2026-12-01T00:00:00")&&d.getDay()>=1&&d.getDay()<=5?"de regalo":"se cotiza en el local"}],["Pulido de ópticas",0]];
+const total=()=>TIPOS[S.tipo][2]+[...S.ad].reduce((t,i)=>t+ADIC[i][1],0);
+const MOTOR=55000;
+const MAPS="https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent("Hipólito Yrigoyen 3756, Mar del Plata");
+const TIPOS=[["Auto","Lavado auto",50000],["SUV mediano","Lavado SUV mediano",55000],["Furgón","Lavado furgón",55000],["Pick up o SUV grande","Lavado pick up o SUV grande",60000],["Pick up full size","Lavado pick up full size",70000]];
+/* Segmento según el modelo (repaso de modelos de Argentina, 15/11/2026). Se evalúa en orden: el primero que coincide gana.
+   Tipos: 0 Auto · 1 SUV mediano · 2 Furgón · 3 Pick up o SUV grande · 4 Pick up full size. Lo que no figura va como Auto. */
+const GUIA=[
+ [1,"bronco sport|yaris cross|corolla cross|c3 aircross|c4 cactus|grand vitara|eclipse cross"],
+ [3,"ranger|rampage|ram 700|ram 1000|dakota|c5 aircross"],
+ [4,"ram|f150|f 150|f250|f 250|silverado|tundra|raptor"],
+ [3,"hilux|amarok|s10|s 10|frontier|alaskan|l200|triton|bt50|bt 50|dmax|d max|titano|landtrek|poer|toro|maverick|montana|oroch|saveiro|strada|gladiator|shark|musso|tunland|t60|t90"],
+ [3,"sw4|territory|trailblazer|everest|pajero|montero|land cruiser|prado|grand cherokee|cherokee|commander|wrangler|bronco|explorer|kuga|edge|equinox|captiva|blazer|tahoe|suburban|traverse|tiguan|touareg|atlas|teramont|rav4|rav 4|highlander|4runner|crv|cr v|pilot|tucson|santa fe|palisade|sportage|sorento|carnival|xtrail|x trail|pathfinder|murano|koleos|5008|outlander|forester|outback|h6|tank|tiggo 7|tiggo 8|jaecoo|bj40|song plus|tang|q5|q7|q8|x3|x4|x5|x6|x7|glc|gle|gls|xc60|xc90|macan|cayenne|discovery|defender|range rover|velar|stelvio|rx|f pace|fpace|model y|journey|durango|freemont"],
+ [2,"kangoo|partner|berlingo|fiorino|doblo|qubo|sprinter|vito|master|trafic|ducato|scudo|boxer|expert|jumper|jumpy|transit|hiace|h1|staria|daily|courier|combo|caddy|transporter"],
+ [1,"hrv|hr v|wrv|wr v|zrv|zr v|renegade|compass|kicks|tracker|tcross|t cross|nivus|taos|tera|creta|kona|venue|seltos|stonic|soul|duster|captur|kardian|arkana|boreal|2008|3008|aircross|cactus|basalt|pulse|fastback|500x|ecosport|eco sport|puma|tiggo|jolion|yuan|asx|vitara|jimny|s cross|scross|cx3|cx 3|cx30|cx 30|cx5|cx 5|q2|q3|x1|x2|gla|glb|xc40|ux|nx|tonale|evoque|countryman|mokka|crossland|ds3|ds7|ix35|avenger"]
+].map(([t,p])=>[t,new RegExp("(^|[^a-z0-9])("+p+")([^a-z0-9]|$)")]);
+function guess(txt){const s=String(txt||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/-/g,"").replace(/\s+/g," ").trim();
+  for(const [t,re] of GUIA){const m=re.exec(s);if(!m)continue;
+    /* 2008, 3008 y 5008 cuentan como modelo solo si dice Peugeot o si es lo primero que se escribió (si no, es el año). */
+    if(/^[235]008$/.test(m[2])&&!/peugeot/.test(s)&&!s.startsWith(m[2]))continue;
+    return t}
+  return 0}
+const DIAS=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],MESES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+/* Solo en modo prueba: una patente que "ya vino", para ver cómo reconoce al cliente. */
+const DEMO={"2235551234":{nombre:"Juan P.",autos:[{id:"AB123CD",auto:"Toyota Hilux",pat:"AB•••CD"},{id:"AC456DF",auto:"Fiat Cronos",pat:"AC•••DF"}]}};
+/* Pantallas en orden. Si la patente ya vino, no se pregunta el auto; si además el WhatsApp coincide, tampoco el nombre. */
+function path(){return ["hora","vos","auto","pago","fin"]}
+const BRAVO=["Genial!","Perfecto!","Buenísimo!","Excelente!","Ya casi!","Muy bien!","Listo!"];
+const S={step:"hora",day:null,autoDay:true,slot:null,slots:null,list:[],tipo:null,pago:null,v:{tel:"",nom:"",auto:"",pat:""},busy:false,note:"",known:false,skipNom:false,ad:new Set(),cli:null,car:null,otro:false};
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money=n=>"$"+n.toLocaleString("es-AR");
+if(!API)$("demo").hidden=false;
+
+function hoursFor(d){const w=d.getDay();if(w===0)return[];const last=w===6?13:16,o=[];for(let h=8;h<=last;h++)o.push(pad(h)+":00");return o}
+function dayLabel(v){const x=new Date(v+"T12:00:00"),d=new Date();d.setHours(12,0,0,0);const k=Math.round((x-d)/864e5);return k===0?"Hoy":k===1?"Mañana":DIAS[x.getDay()]+" "+x.getDate()}
+function fmtDay(v){const x=new Date(v+"T12:00:00");return DIAS[x.getDay()]+" "+x.getDate()+" "+MESES[x.getMonth()]}
+function buildDays(){const o=[],d=new Date();d.setHours(12,0,0,0);for(let k=0;o.length<6&&k<10;k++){const x=new Date(d);x.setDate(d.getDate()+k);if(x.getDay()===0)continue;if(k===0&&new Date().getHours()>=(x.getDay()===6?13:16))continue;o.push(ymd(x))}S.list=o}
+function freeOf(day,occ){const d=new Date(day+"T12:00:00"),now=new Date(),today=ymd(now)===day;return hoursFor(d).filter(h=>!(today&&Number(h.slice(0,2))<=now.getHours())&&(occ[h]||0)<1)}
+async function loadSlots(day){S.slots=null;if(S.step==="hora")render();let occ={};
+  try{if(API){const r=await fetch(API+"?fecha="+day);const j=await r.json();if(!j.ok)throw new Error(j.error||"error");occ=j.ocupados||{}}else{occ={"10:00":1,"15:00":1}}}
+  catch(e){if(S.day===day){S.slots="error";if(S.step==="hora")render()}return}
+  if(S.day!==day)return;
+  /* Si el día puesto por defecto ya no tiene lugar, pasa solo al siguiente. */
+  if(S.autoDay&&!freeOf(day,occ).length){const i=S.list.indexOf(day);if(i>-1&&i<S.list.length-1){S.day=S.list[i+1];return loadSlots(S.day)}}
+  S.slots=occ;if(S.step==="hora")render()}
+
+/* Felicita y pasa a la pantalla siguiente. */
+function cheer(next,sub){S.busy=true;const c=$("cheer");c.innerHTML=`<div><i>✓</i>${BRAVO[Math.floor(Math.random()*BRAVO.length)]}${sub?`<small>${esc(sub)}</small>`:""}</div>`;
+  setTimeout(()=>{$("stage").classList.add("dim");c.hidden=false},180);
+  setTimeout(()=>{c.hidden=true;S.busy=false;go(next)},sub?1900:900)}
+function go(step){S.step=step;render();window.scrollTo(0,0)}
+/* Busca al cliente por WhatsApp en la base de clientes. Devuelve {nombre, autos:[{id, auto, pat}]} o null. El nombre viene abreviado y la patente tapada, para no mostrar datos completos a quien tipee un número ajeno. */
+async function buscarCliente(t){try{if(!API)return DEMO[t.slice(-10)]||null;const j=await(await fetch(API+"?tel="+t)).json();return j.ok&&j.cliente||null}catch(e){return null}}
+
+/* Qué pasa después de cada dato. El precio sale solo del modelo: el cliente no lo elige. */
+
+
+
+
+
+
+const CAMPOS={
+  tel:{l:"WhatsApp",t:"Tu <span>WhatsApp</span>?",ph:"223 555 1234",attr:'type="tel" inputmode="tel" autocomplete="tel"',err:"Ponelo con característica, por ejemplo 223 555 1234.",ok:v=>v.replace(/\D/g,"").length>=10},
+  nom:{l:"Nombre y apellido",t:"Tu <span>nombre</span> y apellido?",ph:"Juan Pérez",attr:'type="text" autocomplete="name" autocapitalize="words"',err:"Poné nombre y apellido.",ok:v=>v.trim().split(/\s+/).length>=2},
+  auto:{l:"Marca y modelo",t:"Qué <span>auto</span> traés?",ph:"Toyota Hilux",attr:'type="text" autocomplete="off"',err:"Contanos marca y modelo.",ok:v=>v.trim().length>=3},
+  pat:{l:"Patente",t:"Tu <span>patente</span>?",ph:"AB123CD",attr:'type="text" autocomplete="off" autocapitalize="characters"',err:"Revisala: AB123CD o ABC123.",ok:v=>/^([A-Z]{2}\d{3}[A-Z]{2}|[A-Z]{3}\d{3})$/.test(v.toUpperCase().replace(/[\s-]/g,""))}
+};
+/* Pantallas con dos datos juntos. */
+const PANT={vos:{t:"Tus <span>datos</span>",f:["tel","nom"]},auto:{t:"Tu <span>auto</span>",f:["pat","auto"]}};
+function render(){const st=$("stage"),s=S.step;st.className="";void st.offsetWidth;
+  const P=path(),idx=s==="dia"?0:Math.max(0,P.indexOf(s));$("bar").style.width=Math.round(idx/(P.length-1)*100)+"%";$("back").hidden=s==="hora";
+  let h="";const note=S.note?`<p class="err">${S.note}</p>`:"";
+  if(s==="hora"){h=`<h1><span>${dayLabel(S.day)}</span>, a qué hora?</h1>${note}`;
+    if(!S.slots)h+='<p class="msg">Buscando horarios…</p>';
+    else if(S.slots==="error")h+='<p class="msg">No pudimos leer la agenda. Probá de nuevo o pedile ayuda al asesor.</p>';
+    else{const free=freeOf(S.day,S.slots),hs=hoursFor(new Date(S.day+"T12:00:00"));
+      h+=free.length?`<div class="slots">${hs.map(x=>`<button type="button" data-h="${x}" ${free.includes(x)?"":"disabled"}>${x}</button>`).join("")}</div>`:'<p class="msg">Ese día ya no quedan horarios.</p>'}
+    h+='<button type="button" class="link" id="otro">Prefiero otro día</button>'}
+  else if(s==="dia"){h=`<h1>Qué <span>día</span>?</h1><div class="opts">${S.list.map(v=>`<button type="button" class="opt" data-d="${v}"><span>${dayLabel(v)}</span></button>`).join("")}</div>`}
+  else if(s==="auto"&&S.cli&&S.cli.autos.length&&!S.otro){h=`<h1>Qué <span>auto</span> traés?</h1><div class="opts">${S.cli.autos.map((a,i)=>`<button type="button" class="opt" data-c="${i}"><span>${esc(a.auto)}<small>${esc(a.pat)}</small></span><b>${money(TIPOS[guess(a.auto)][2])}</b></button>`).join("")}<button type="button" class="opt" data-c="otro"><span>Otro auto</span></button></div>`}
+  else if(PANT[s]){const c=PANT[s];h=`<h1>${c.t}</h1><form id="f" class="ff" novalidate>${c.f.map(k=>`<label>${CAMPOS[k].l}<input class="t" id="i_${k}" ${CAMPOS[k].attr} placeholder="${CAMPOS[k].ph}" value="${esc(S.v[k])}"></label>`).join("")}<p class="hint" id="hint"></p><p class="err" id="err" role="alert"></p><button class="cta" type="submit">Seguir</button></form>`}
+  else if(s==="tipo"){const g=guess(S.v.auto);h=`<h1>Es este <span>tamaño</span>?</h1><div class="opts">${TIPOS.map(([n,,p],i)=>`<button type="button" class="opt${i===g?" sug":""}" data-i="${i}"><span>${n}${i===g?"<small>Lo elegimos por tu modelo</small>":""}</span><b>${money(p)}</b></button>`).join("")}</div>`}
+  else if(s==="pago"){h=`<h1>Cómo <span>pagás</span>?</h1><div class="opts"><button type="button" class="opt" data-p="local"><span>En el local<small>Cuando traés el auto</small></span></button><button type="button" class="opt" data-p="mp"><span>Ahora con Mercado Pago<small>${money(TIPOS[S.tipo][2])}</small></span></button></div>`}
+  else if(s==="fin"){h=`<h1>Todo <span>listo</span></h1><div class="sumc"><b>${dayLabel(S.day)} · ${S.slot}</b>${esc(S.v.auto)} · ${esc(S.car?S.car.pat:patente())}<br>${TIPOS[S.tipo][1]}<br>Pago: ${S.pago==="mp"?"ahora con Mercado Pago":"en el local"}<div class="tot"><span>Total</span><b id="tot">${money(total())}</b></div></div><p class="kick">Sumale a tu lavado</p><div class="opts">${ADIC.map(([n,pr],i)=>`<button type="button" class="opt add${S.ad.has(i)?" ok":""}" data-a="${i}" aria-pressed="${S.ad.has(i)}"><span>${n}</span><b${pr?' class="p"':""}>${pr?"+"+money(pr):(ADIC[i][2]?ADIC[i][2]():"se cotiza en el local")}</b></button>`).join("")}</div><p class="err" id="err" role="alert"></p><button class="cta g" id="agendar" type="button">Agendar</button><p class="fine">Al agendar aceptás que usemos tus datos para el turno y para avisarte por WhatsApp.</p>`}
+  st.innerHTML=h;S.note="";st.style.animation="none";void st.offsetWidth;st.style.animation="";
+  const inp=document.querySelector("#stage input.t");if(inp)setTimeout(()=>inp.focus({preventScroll:true}),320);
+  let t="Hola, quiero un turno de lavado.";const n=S.v.nom.trim(),a=S.v.auto.trim();
+  if(n||a)t=`Hola${n?", soy "+n:""}. Quiero un turno de lavado${a?" para mi "+a:""}${S.tipo!==null?" ("+TIPOS[S.tipo][1]+", "+money(TIPOS[S.tipo][2])+")":""}.`;
+  $("mWa").href="https://wa.me/"+WA+"?text="+encodeURIComponent(t)}
+const patente=()=>S.v.pat.toUpperCase().replace(/[\s-]/g,"");
+
+$("stage").addEventListener("click",e=>{if(S.busy)return;const b=e.target.closest("button");if(!b||b.disabled)return;
+  if(b.id==="otro"){go("dia");return}
+  if(b.dataset.c==="otro"){S.otro=true;S.car=null;S.v.auto="";S.v.pat="";go("auto");return}
+  if(b.dataset.c){S.car=S.cli.autos[Number(b.dataset.c)];S.v.auto=S.car.auto;S.tipo=guess(S.car.auto);b.classList.add("ok");cheer("pago",`${TIPOS[S.tipo][1]} · ${money(TIPOS[S.tipo][2])}`);return}
+  if(b.id==="agendar"){agendar(b);return}
+  if(b.dataset.a){const i=Number(b.dataset.a);S.ad.has(i)?S.ad.delete(i):S.ad.add(i);b.classList.toggle("ok",S.ad.has(i));b.setAttribute("aria-pressed",S.ad.has(i));$("tot").textContent=money(total());return}
+  if(b.dataset.h){S.slot=b.dataset.h;b.classList.add("ok");cheer("vos")}
+  else if(b.dataset.d){S.day=b.dataset.d;S.autoDay=false;S.slot=null;b.classList.add("ok");loadSlots(S.day);cheer("hora")}
+  else if(b.dataset.i){S.tipo=Number(b.dataset.i);b.classList.remove("sug");b.classList.add("ok");cheer("pat")}
+  else if(b.dataset.p){S.pago=b.dataset.p;b.classList.add("ok");cheer("fin")}});
+$("stage").addEventListener("submit",e=>{e.preventDefault();if(S.busy)return;const ks=PANT[S.step];if(!ks)return;
+  for(const k of ks.f){const el=$("i_"+k);if(!CAMPOS[k].ok(el.value)){$("err").textContent=CAMPOS[k].err;el.focus();return}}
+  for(const k of ks.f){const el=$("i_"+k);S.v[k]=el.value.trim();el.classList.add("ok");el.blur()}
+  if(S.step==="auto"){S.car=null;S.tipo=guess(S.v.auto);cheer("pago",`${TIPOS[S.tipo][1]} · ${money(TIPOS[S.tipo][2])}`)}
+  else{if(S.cli&&S.cli.tel!==S.v.tel.replace(/\D/g,"").slice(-10))S.cli=null;S.otro=false;cheer("auto",S.cli?"Qué bueno verte de nuevo":"")}});
+$("stage").addEventListener("input",async e=>{const er=$("err");if(er)er.textContent="";
+  /* Al completar la patente, si ya vino antes se carga solo el modelo. */
+  if(e.target.id==="i_tel"){const t=e.target.value.replace(/\D/g,""),n=$("i_nom");if(t.length>=10){const c=await buscarCliente(t);if($("i_tel")!==e.target)return;
+      if(c){c.tel=t.slice(-10);S.cli=c;const pn=(c.nombre||"").trim(),full=pn.split(/\s+/).length>=2;if(!n.value||n.dataset.auto){n.value=pn;n.dataset.auto="1";n.classList.toggle("ok",full)}$("hint").textContent="Ya te conocemos"+(pn?", "+pn.split(" ")[0]:"")+(full?"":". Completá tu nombre y apellido")}
+      else if(n.dataset.auto){S.cli=null;n.value="";delete n.dataset.auto;n.classList.remove("ok");$("hint").textContent=""}}}
+  else if(e.target.id==="i_nom"){delete e.target.dataset.auto;e.target.classList.remove("ok")}});
+$("back").addEventListener("click",()=>{if(S.busy)return;const s=S.step;if(s==="auto"&&S.otro&&S.cli){S.otro=false;render();return}const P=path();go(s==="dia"?"hora":P[Math.max(0,P.indexOf(s)-1)])});
+
+async function agendar(b){b.disabled=true;b.textContent="Reservando…";
+  const adic=[...S.ad].sort().map(i=>ADIC[i][0]);
+  const data={servicio:TIPOS[S.tipo][1]+adic.map(n=>" + "+n.toLowerCase()).join(""),precio:total(),base:TIPOS[S.tipo][2],adic,fecha:S.day,hora:S.slot,nombre:S.v.nom,telefono:S.v.tel.replace(/\D/g,""),auto:S.v.auto,patente:S.car?"":patente(),autoId:S.car?S.car.id:"",clienteConocido:!!S.cli,pago:S.pago==="mp"?"Mercado Pago online":"En el local",conocido:S.skipNom,web:$("web").value};
+  const fail=m=>{b.disabled=false;b.textContent="Agendar";$("err").textContent=m};
+  try{if(API){const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data)});const j=await r.json();
+      if(!j.ok){if(j.error==="espera"){fail("Ya sacaste un turno recién. Si necesitás otro, esperá unos minutos o pedile ayuda al asesor.");return}if(j.error==="ocupado"){S.slot=null;S.note="Justo se ocupó ese horario. Elegí otro.";loadSlots(S.day);go("hora")}else fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.");return}}
+    party(data)}catch(err){fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.")}}
+function party(d){const p=$("party");const cols=["#ffffff","#0d7a3a","#c6a35a","#0a0a0a"];let conf="";for(let i=0;i<40;i++)conf+=`<i class="conf" style="left:${Math.random()*100}%;background:${cols[i%4]};animation-duration:${1.6+Math.random()*1.6}s;animation-delay:${Math.random()*.6}s"></i>`;
+  let first=true;const base=d.base;const draw=()=>{const link=PAGOS[base];let pay="";
+  if(S.pago==="mp")pay=link?`<a class="pay" href="${link}" target="_blank" rel="noopener">Pagar ${money(base)}</a>${d.adic.length?`<p class="addr">Los adicionales se pagan en el local.</p>`:""}`:`<p>El pago online todavía no está conectado: se paga en el local.</p>`;
+  p.innerHTML=`<div class="party${first?"":" still"}" role="status">${conf}<div class="tick">✓</div><h3>Turno confirmado!</h3><div class="card"><b>${fmtDay(d.fecha)} · ${d.hora}</b>${esc(d.auto)} ${esc(S.car?S.car.pat:d.patente)} · ${money(d.precio)}</div>${pay}${d.adic.length?`<p class="addr">Con ${esc(d.adic.join(", ").toLowerCase())}</p>`:""}<a class="pay go" href="${MAPS}" target="_blank" rel="noopener">Ir</a><p class="addr">Hipólito Yrigoyen 3756, Mar del Plata</p><button type="button" id="again">Listo</button></div>`;p.hidden=false;first=false;
+  const m=$("motor");if(m)m.onclick=async()=>{m.disabled=true;m.textContent="Agregando…";const nd={...d,precio:d.precio+MOTOR,servicio:d.servicio+" + lavado de motor",accion:"adicional"};let ok=true;
+    if(API){try{const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(nd)});const j=await r.json();ok=!!j.ok}catch(e){ok=false}}
+    if(ok){d.motor=true;d.precio=nd.precio;d.servicio=nd.servicio;conf="";draw()}else{m.disabled=false;m.textContent="No se pudo agregar. Tocá para reintentar"}};
+  $("again").onclick=()=>{p.hidden=true;S.ad.clear();S.cli=null;S.car=null;S.otro=false;Object.assign(S,{slot:null,tipo:null,pago:null,autoDay:true,known:false,skipNom:false,v:{tel:"",nom:"",auto:"",pat:""}});S.day=S.list[0];loadSlots(S.day);go("hora")}};draw()}
+buildDays();S.day=S.list[0];render();loadSlots(S.day);
+</script>
+
+</body></html>
