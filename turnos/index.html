@@ -83,6 +83,13 @@ input:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--gold);o
 .party a.pay{background:var(--cream);color:#0a0a0a;border-color:transparent;min-height:58px}
 .party a.go{min-width:220px;justify-content:center;font:400 28px var(--f-disp);letter-spacing:.1em}
 .party .addr{font-size:14px;color:var(--fg);margin-top:-6px}
+.party a.cal{background:var(--go);color:#fff;border-color:transparent;min-height:58px;flex-direction:column;justify-content:center;line-height:1.2}
+.party a.cal small{font:400 11px var(--f-body);letter-spacing:.06em;text-transform:none;opacity:.9}
+.party .cal2,.party .canc{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg);text-decoration:underline;text-underline-offset:4px}
+.party .canc{color:var(--mut)}
+.cta.no{background:#c0392b;color:#fff}
+.aviso{border:1px solid var(--line);border-radius:3px;padding:12px 16px;margin:-6px 0 20px;font-size:14px;color:var(--fg)}
+.aviso a{color:var(--gold)}
 .party.still,.party.still *{animation:none!important}.party.still::before{display:none}
 .conf{position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;animation:fall linear forwards}
 @keyframes fadeG{to{opacity:0}}
@@ -192,7 +199,7 @@ const PANT={vos:{t:"Tus <span>datos</span>",f:["tel","nom"]},auto:{t:"Tu <span>a
 function render(){const st=$("stage"),s=S.step;st.className="";void st.offsetWidth;
   const P=path(),idx=s==="dia"?0:Math.max(0,P.indexOf(s));$("bar").style.width=Math.round(idx/(P.length-1)*100)+"%";$("back").hidden=s==="hora";
   let h="";const note=S.note?`<p class="err">${S.note}</p>`:"";
-  if(s==="hora"){h=`<h1><span>${dayLabel(S.day)}</span>, a qué hora?</h1>${note}`;
+  if(s==="hora"){const mt=miTurno();h=`${mt?`<p class="aviso">Ya tenés turno el ${fmtDay(mt.f)} a las ${mt.h}. <a href="#c-${mt.c}">Cancelarlo</a></p>`:""}<h1><span>${dayLabel(S.day)}</span>, a qué hora?</h1>${note}`;
     if(!S.slots)h+='<p class="msg">Buscando horarios…</p>';
     else if(S.slots==="error")h+='<p class="msg">No pudimos leer la agenda. Probá de nuevo o pedile ayuda al asesor.</p>';
     else{const free=freeOf(S.day,S.slots),hs=hoursFor(new Date(S.day+"T12:00:00"));
@@ -239,19 +246,53 @@ async function agendar(b){b.disabled=true;b.textContent="Reservando…";
   const data={servicio:TIPOS[S.tipo][1]+adic.map(n=>" + "+n.toLowerCase()).join(""),precio:total(),base:TIPOS[S.tipo][2],adic,fecha:S.day,hora:S.slot,nombre:S.v.nom,telefono:S.v.tel.replace(/\D/g,""),auto:S.v.auto,patente:S.car?"":patente(),autoId:S.car?S.car.id:"",clienteConocido:!!S.cli,pago:S.pago==="mp"?"Mercado Pago online":"En el local",conocido:S.skipNom,web:$("web").value};
   const fail=m=>{b.disabled=false;b.textContent="Agendar";$("err").textContent=m};
   try{if(API){const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data)});const j=await r.json();
-      if(!j.ok){if(j.error==="espera"){fail("Ya sacaste un turno recién. Si necesitás otro, esperá unos minutos o pedile ayuda al asesor.");return}if(j.error==="ocupado"){S.slot=null;S.note="Justo se ocupó ese horario. Elegí otro.";loadSlots(S.day);go("hora")}else fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.");return}}
-    avisar(data);party(data)}catch(err){fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.")}}
+      if(!j.ok){if(j.error==="espera"){fail("Ya sacaste un turno recién. Si necesitás otro, esperá unos minutos o pedile ayuda al asesor.");return}if(j.error==="ocupado"){S.slot=null;S.note="Justo se ocupó ese horario. Elegí otro.";loadSlots(S.day);go("hora")}else fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.");return}
+      data.codigo=j.codigo||""}
+    if(data.codigo)guardarTurno(data);avisar(data);party(data)}catch(err){fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.")}}
 /* Aviso al celular del equipo (app ntfy). Sale desde el navegador del cliente, sin esperar respuesta, y sin datos personales (ni nombre, ni teléfono, ni patente). */
 function avisar(d){if(!API)return;try{fetch("https://ntfy.sh/",{method:"POST",keepalive:true,body:JSON.stringify({topic:"autohouse-turnos-f898cf71",title:"Turno nuevo: "+fmtDay(d.fecha)+" "+d.hora,message:d.auto+" · "+d.servicio+" · "+money(d.precio)+" · "+d.pago,tags:["car"],priority:4})}).catch(()=>{})}catch(e){}}
+/* Recordatorio en el calendario del cliente: avisa 30 minutos antes. iPhone usa el archivo .ics; el resto, Google Calendar. */
+const pz=n=>String(n).padStart(2,"0");
+function utc(dt){return dt.getUTCFullYear()+pz(dt.getUTCMonth()+1)+pz(dt.getUTCDate())+"T"+pz(dt.getUTCHours())+pz(dt.getUTCMinutes())+"00Z"}
+function calLinks(d){const ini=new Date(d.fecha+"T"+d.hora+":00-03:00"),fin=new Date(ini.getTime()+36e5);
+  const tit="Lavado en La Guardería Auto House",lugar="Hipólito Yrigoyen 3756, Mar del Plata";
+  const det=d.servicio+" · "+d.auto+(d.codigo?"\nSi no podés venir, cancelalo en https://autohouse.com.ar/turnos/#c-"+d.codigo:"");
+  const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//La Guarderia Auto House//Turnos//ES","BEGIN:VEVENT","UID:"+(d.codigo||Date.now())+"@autohouse.com.ar","DTSTAMP:"+utc(new Date()),"DTSTART:"+utc(ini),"DTEND:"+utc(fin),"SUMMARY:"+tit,"LOCATION:"+lugar.replace(/,/g,"\\,"),"DESCRIPTION:"+det.replace(/\n/g,"\\n").replace(/,/g,"\\,"),"BEGIN:VALARM","TRIGGER:-PT30M","ACTION:DISPLAY","DESCRIPTION:Tu lavado es en 30 minutos","END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
+  return{ics:"data:text/calendar;charset=utf-8,"+encodeURIComponent(ics),g:"https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(tit)+"&dates="+utc(ini)+"/"+utc(fin)+"&location="+encodeURIComponent(lugar)+"&details="+encodeURIComponent(det)}}
+function calBtns(d){const c=calLinks(d),ios=/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)&&"ontouchend" in document;
+  const main=ios?`<a class="pay cal" href="${c.ics}" download="turno-lavado.ics">Agendalo en tu celu<small>Te avisa 30 minutos antes</small></a>`:`<a class="pay cal" href="${c.g}" target="_blank" rel="noopener">Agendalo en tu celu<small>Te avisa 30 minutos antes</small></a>`;
+  const alt=ios?`<a class="cal2" href="${c.g}" target="_blank" rel="noopener">Usar Google Calendar</a>`:`<a class="cal2" href="${c.ics}" download="turno-lavado.ics">Otro calendario</a>`;
+  return main+alt}
+/* Último turno sacado desde este celular, para ofrecer cancelarlo si vuelve a entrar. */
+function guardarTurno(d){try{localStorage.setItem("lg_turno",JSON.stringify({c:d.codigo,f:d.fecha,h:d.hora}))}catch(e){}}
+function miTurno(){try{const t=JSON.parse(localStorage.getItem("lg_turno")||"null");if(t&&new Date(t.f+"T"+t.h+":00-03:00")>new Date())return t}catch(e){}return null}
+/* Cancelar: autohouse.com.ar/turnos/#c-CODIGO */
+function nuevoTurno(){history.replaceState(null,"",location.pathname);$("party").hidden=true;S.slot=null;S.autoDay=true;S.day=S.list[0];go("hora");loadSlots(S.day)}
+async function showCancel(code){S.step="cancel";$("party").hidden=true;$("back").hidden=true;$("bar").style.width="0";const st=$("stage");
+  const fin=(h)=>{st.innerHTML=h;const n=$("nuevo");if(n)n.onclick=nuevoTurno};
+  fin('<h1>Tu <span>turno</span></h1><p class="msg">Buscando tu turno…</p>');let t=null;
+  try{const j=await(await fetch(API+"?codigo="+encodeURIComponent(code))).json();t=j.ok&&j.turno}catch(e){}
+  if(S.step!=="cancel")return;
+  if(!t){fin('<h1>No encontramos <span>ese turno</span></h1><p class="msg">Revisá el link o pedile ayuda al asesor.</p><button class="cta" id="nuevo" type="button">Sacar un turno</button>');return}
+  if(/cancelad/i.test(t.estado)){fin(`<h1>Turno <span>cancelado</span></h1><p class="msg">El turno del ${esc(fmtDay(t.fecha))} a las ${esc(t.hora)} ya está cancelado.</p><button class="cta" id="nuevo" type="button">Sacar otro turno</button>`);return}
+  fin(`<h1>Tu <span>turno</span></h1><div class="sumc"><b>${esc(dayLabel(t.fecha))} · ${esc(t.hora)}</b>${esc(t.servicio)}<br>Patente ${esc(t.patente)}</div><p class="msg">Si no podés venir, cancelalo y le damos el lugar a otro cliente.</p><p class="err" id="err" role="alert"></p><button class="cta" id="canc1" type="button">Cancelar turno</button><button type="button" class="link" id="nuevo">Volver</button>`);
+  const b=$("canc1");b.onclick=async()=>{if(!b.dataset.ok){b.dataset.ok="1";b.classList.add("no");b.textContent="Sí, cancelar el turno";return}
+    b.disabled=true;b.textContent="Cancelando…";let j=null;try{j=await(await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({accion:"cancelar",codigo:code})})).json()}catch(e){}
+    if(!j||!j.ok){b.disabled=false;b.textContent="Sí, cancelar el turno";$("err").textContent=j&&j.error==="pasado"?"Ese turno ya pasó: no se puede cancelar desde acá.":"No pudimos cancelarlo. Probá de nuevo o pedile ayuda al asesor.";return}
+    try{const m=miTurno();if(m&&m.c===code)localStorage.removeItem("lg_turno")}catch(e){}
+    if(!j.ya)try{fetch("https://ntfy.sh/",{method:"POST",keepalive:true,body:JSON.stringify({topic:"autohouse-turnos-f898cf71",title:"Turno cancelado: "+fmtDay(j.fecha)+" "+j.hora,message:j.servicio+" · el horario quedó libre",tags:["x"],priority:4})}).catch(()=>{})}catch(e){}
+    fin(`<h1>Turno <span>cancelado</span></h1><p class="msg">Listo, liberamos el horario del ${esc(fmtDay(j.fecha))} a las ${esc(j.hora)}. Cuando quieras sacás otro.</p><button class="cta" id="nuevo" type="button">Sacar otro turno</button>`)}}
+function route(){const m=location.hash.match(/^#c-(T[0-9a-f]{10})$/);if(m&&API){showCancel(m[1]);return true}return false}
 function party(d){const p=$("party");const cols=["#ffffff","#0d7a3a","#c6a35a","#0a0a0a"];let conf="";for(let i=0;i<40;i++)conf+=`<i class="conf" style="left:${Math.random()*100}%;background:${cols[i%4]};animation-duration:${1.6+Math.random()*1.6}s;animation-delay:${Math.random()*.6}s"></i>`;
   let first=true;const base=d.base;const draw=()=>{const link=PAGOS[base];let pay="";
   if(S.pago==="mp")pay=link?`<a class="pay" href="${link}" target="_blank" rel="noopener">Pagar ${money(base)}</a>${d.adic.length?`<p class="addr">Los adicionales se pagan en el local.</p>`:""}`:`<p>El pago online todavía no está conectado: se paga en el local.</p>`;
-  p.innerHTML=`<div class="party${first?"":" still"}" role="status">${conf}<div class="tick">✓</div><h3>Turno confirmado!</h3><div class="card"><b>${fmtDay(d.fecha)} · ${d.hora}</b>${esc(d.auto)} ${esc(S.car?S.car.pat:d.patente)} · ${money(d.precio)}</div>${pay}${d.adic.length?`<p class="addr">Con ${esc(d.adic.join(", ").toLowerCase())}</p>`:""}<a class="pay go" href="${MAPS}" target="_blank" rel="noopener">Ir</a><p class="addr">Hipólito Yrigoyen 3756, Mar del Plata</p><button type="button" id="again">Listo</button></div>`;p.hidden=false;first=false;
+  p.innerHTML=`<div class="party${first?"":" still"}" role="status">${conf}<div class="tick">✓</div><h3>Turno confirmado!</h3><div class="card"><b>${fmtDay(d.fecha)} · ${d.hora}</b>${esc(d.auto)} ${esc(S.car?S.car.pat:d.patente)} · ${money(d.precio)}</div>${pay}${d.adic.length?`<p class="addr">Con ${esc(d.adic.join(", ").toLowerCase())}</p>`:""}${calBtns(d)}<a class="pay go" href="${MAPS}" target="_blank" rel="noopener">Ir</a><p class="addr">Hipólito Yrigoyen 3756, Mar del Plata</p>${d.codigo?`<a class="canc" href="#c-${d.codigo}">No podés venir? Cancelá el turno</a>`:""}<button type="button" id="again">Listo</button></div>`;p.hidden=false;first=false;
   const m=$("motor");if(m)m.onclick=async()=>{m.disabled=true;m.textContent="Agregando…";const nd={...d,precio:d.precio+MOTOR,servicio:d.servicio+" + lavado de motor",accion:"adicional"};let ok=true;
     if(API){try{const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(nd)});const j=await r.json();ok=!!j.ok}catch(e){ok=false}}
     if(ok){d.motor=true;d.precio=nd.precio;d.servicio=nd.servicio;conf="";draw()}else{m.disabled=false;m.textContent="No se pudo agregar. Tocá para reintentar"}};
   $("again").onclick=()=>{p.hidden=true;S.ad.clear();S.cli=null;S.car=null;S.otro=false;Object.assign(S,{slot:null,tipo:null,pago:null,autoDay:true,known:false,skipNom:false,v:{tel:"",nom:"",auto:"",pat:""}});S.day=S.list[0];loadSlots(S.day);go("hora")}};draw()}
-buildDays();S.day=S.list[0];render();loadSlots(S.day);
+buildDays();S.day=S.list[0];if(!route())render();loadSlots(S.day);
+window.addEventListener("hashchange",()=>{if(!route()&&S.step==="cancel")nuevoTurno()});
 </script>
 
 </body></html>
