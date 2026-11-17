@@ -1,4 +1,10 @@
-<!doctype html><html lang="es"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="es"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><!-- Medición (pedido de Manolo, aprobado por Julián 16/11/2026): píxel de Meta "Autohouse web - turnos" y etiqueta de Google Ads. Sin datos personales. -->
+<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','2260860321510656');fbq('track','PageView');fbq('track','ViewContent');</script>
+<noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=2260860321510656&ev=PageView&noscript=1"></noscript>
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18437996295"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18437996295');</script>
+<script>/* Guarda los parámetros de los anuncios (utm_*, gclid, fbclid…) y los pasa a los links internos hacia /lavadero/ y /turnos/. */(function(){var K=/^(utm_[a-z]+|gclid|gbraid|wbraid|fbclid)$/i,p=new URLSearchParams(location.search),k=[];p.forEach(function(v,n){if(K.test(n))k.push([n,v])});var q='';try{if(k.length){q=new URLSearchParams(k).toString();sessionStorage.setItem('lg_q',q)}else q=sessionStorage.getItem('lg_q')||''}catch(e){}if(!q)return;function fix(){document.querySelectorAll('a[href]').forEach(function(a){var h=a.getAttribute('href');if(!/^(\/?(lavadero|turnos)\/|\/$|\.\.?\/)/.test(h)||/[?]/.test(h))return;var i=h.indexOf('#');a.setAttribute('href',(i<0?h:h.slice(0,i))+'?'+q+(i<0?'':h.slice(i)))})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix()})();</script>
+</head><body>
 <title>Reservá tu lavado | La Guardería Auto House</title>
 <meta name="description" content="Sacá tu turno de lavado en La Guardería Auto House, Mar del Plata. Elegí día y horario online.">
 <link rel="icon" href="/favicon.ico">
@@ -224,7 +230,7 @@ $("stage").addEventListener("click",e=>{if(S.busy)return;const b=e.target.closes
   if(b.dataset.c){S.car=S.cli.autos[Number(b.dataset.c)];S.v.auto=S.car.auto;S.tipo=guess(S.car.auto);b.classList.add("ok");cheer("pago",`${TIPOS[S.tipo][1]} · ${money(TIPOS[S.tipo][2])}`);return}
   if(b.id==="agendar"){agendar(b);return}
   if(b.dataset.a){const i=Number(b.dataset.a);S.ad.has(i)?S.ad.delete(i):S.ad.add(i);b.classList.toggle("ok",S.ad.has(i));b.setAttribute("aria-pressed",S.ad.has(i));$("tot").textContent=money(total());return}
-  if(b.dataset.h){S.slot=b.dataset.h;b.classList.add("ok");cheer("vos")}
+  if(b.dataset.h){S.slot=b.dataset.h;try{fbq("trackCustom","ElegirHorario")}catch(x){}b.classList.add("ok");cheer("vos")}
   else if(b.dataset.d){S.day=b.dataset.d;S.autoDay=false;S.slot=null;b.classList.add("ok");loadSlots(S.day);cheer("hora")}
   else if(b.dataset.i){S.tipo=Number(b.dataset.i);b.classList.remove("sug");b.classList.add("ok");cheer("pat")}
   else if(b.dataset.p){S.pago=b.dataset.p;b.classList.add("ok");cheer("fin")}});
@@ -248,7 +254,7 @@ async function agendar(b){b.disabled=true;b.textContent="Reservando…";
   try{if(API){const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data)});const j=await r.json();
       if(!j.ok){if(j.error==="espera"){fail("Ya sacaste un turno recién. Si necesitás otro, esperá unos minutos o pedile ayuda al asesor.");return}if(j.error==="ocupado"){S.slot=null;S.note="Justo se ocupó ese horario. Elegí otro.";loadSlots(S.day);go("hora")}else fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.");return}
       data.codigo=j.codigo||""}
-    if(data.codigo)guardarTurno(data);avisar(data);party(data)}catch(err){fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.")}}
+    if(data.codigo)guardarTurno(data);medirTurno(data.codigo);avisar(data);party(data)}catch(err){fail("No pudimos guardar el turno. Probá de nuevo o pedile ayuda al asesor.")}}
 /* Aviso al celular del equipo (app ntfy). Sale desde el navegador del cliente, sin esperar respuesta, y sin datos personales (ni nombre, ni teléfono, ni patente). */
 function avisar(d){if(!API)return;try{fetch("https://ntfy.sh/",{method:"POST",keepalive:true,body:JSON.stringify({topic:"autohouse-turnos-f898cf71",title:"Turno nuevo: "+fmtDay(d.fecha)+" "+d.hora,message:d.auto+" · "+d.servicio+" · "+money(d.precio)+" · "+d.pago,tags:["car"],priority:4})}).catch(()=>{})}catch(e){}}
 /* Recordatorio en el calendario del cliente: avisa 30 minutos antes. iPhone usa el archivo .ics; el resto, Google Calendar. */
@@ -264,6 +270,9 @@ function calBtns(d){const c=calLinks(d),ios=/iPhone|iPad|iPod|Macintosh/.test(na
   const alt=ios?`<a class="cal2" href="${c.g}" target="_blank" rel="noopener">Usar Google Calendar</a>`:`<a class="cal2" href="${c.ics}" download="turno-lavado.ics">Otro calendario</a>`;
   return main+alt}
 /* Último turno sacado desde este celular, para ofrecer cancelarlo si vuelve a entrar. */
+/* Conversión: una sola vez por turno (si vuelve de Mercado Pago o recarga, no se repite). Sin datos personales. */
+function medirTurno(c){const id=c||(S.day+"-"+S.slot);try{const k="lg_conv_"+id;if(localStorage.getItem(k))return;localStorage.setItem(k,"1")}catch(e){}
+  try{fbq("track","Schedule",{},{eventID:id})}catch(e){}try{gtag("event","conversion",{send_to:"AW-18437996295/P8OdCObezbkdEIf-9ddE",transaction_id:id})}catch(e){}}
 function guardarTurno(d){try{localStorage.setItem("lg_turno",JSON.stringify({c:d.codigo,f:d.fecha,h:d.hora}))}catch(e){}}
 function miTurno(){try{const t=JSON.parse(localStorage.getItem("lg_turno")||"null");if(t&&new Date(t.f+"T"+t.h+":00-03:00")>new Date())return t}catch(e){}return null}
 /* Cancelar: autohouse.com.ar/turnos/#c-CODIGO */
