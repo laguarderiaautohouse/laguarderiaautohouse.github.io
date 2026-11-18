@@ -1,0 +1,5 @@
+<!doctype html><meta charset="utf-8"><title>envio</title><body>enviando...<script>
+(async()=>{const names=(new URLSearchParams(location.search).get('f')||'').split(',').filter(Boolean);
+const out=[];for(const n of names){const r=await fetch(n+'.jpg',{cache:'no-store'});out.push({name:n+'.jpg',buf:await r.arrayBuffer()});}
+if(window.opener){window.opener.postMessage({lgFiles:out},'https://adsmanager.facebook.com');document.body.textContent='listo '+out.length;}else{document.body.textContent='sin opener';}})();
+</script></body>
