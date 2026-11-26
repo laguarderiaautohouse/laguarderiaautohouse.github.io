@@ -1,0 +1,15 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>La Guardería Auto House</title>
+<meta name="robots" content="noindex">
+<style>body{margin:0;background:#0a0a0a;color:#e8e5de;font:16px system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center;padding:16px}a{color:#f0d79b}</style>
+<script>
+// Si piden la página para compartir de un auto que todavía no se generó,
+// mandamos directo a la ficha del auto en vez de mostrar un error.
+(function(){
+  var m=location.pathname.match(/\/agencia\/v\/(\d+)(\.html)?\/?$/);
+  if(m){location.replace("/agencia/"+location.search+"#"+m[1]);return;}
+  if(/^\/agencia\//.test(location.pathname)){location.replace("/agencia/");}
+})();
+</script>
+</head><body><p>No encontramos esta página.<br><a href="/agencia/">Ver los autos</a> · <a href="/">Inicio</a></p></body></html>
