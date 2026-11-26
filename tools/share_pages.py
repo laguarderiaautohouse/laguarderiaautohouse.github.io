@@ -20,7 +20,7 @@ for f in os.listdir(out):
         os.remove(os.path.join(out, f))  # autos que ya no están
 
 for cid, c in cars.items():
-    title = html.escape(f"{c['t']} · La Guardería Garage")
+    title = html.escape(("VENDIDO · " if c.get("vd") else "") + f"{c['t']} · La Guardería Auto House")
     desc = html.escape(f"{c['m']}. Mirá las fotos y el precio en La Guardería Auto House, Mar del Plata.")
     img = f"{BASE}/agencia/{c['f'][0]}" if c.get("f") else f"{BASE}/agencia/img/poster.jpg"
     url = f"{BASE}/agencia/v/{cid}.html"
