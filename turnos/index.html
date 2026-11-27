@@ -86,6 +86,7 @@ input:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--gold);o
 .party .card b{font:400 27px var(--f-disp);letter-spacing:.02em;display:block;color:#fff;animation:cardB 1.4s 1.3s both}
 .tick{width:76px;height:76px;border-radius:50%;background:var(--go);color:#fff;display:grid;place-items:center;font-size:48px;font-weight:900;animation:pop .5s cubic-bezier(.2,1.6,.4,1),tickC 1.4s 1.3s both}
 .party button,.party a.pay{min-height:52px;padding:0 26px;border-radius:3px;border:1px solid currentColor;background:transparent;color:inherit;font:600 13px var(--f-body);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
+.party .ali b{letter-spacing:.04em}.party .ali .cpy{min-height:36px;padding:0 12px;margin-left:6px;font-size:11px}
 .party a.pay{background:var(--cream);color:#0a0a0a;border-color:transparent;min-height:58px}
 .party a.go{min-width:220px;justify-content:center;font:400 28px var(--f-disp);letter-spacing:.1em}
 .party .addr{font-size:14px;color:var(--fg);margin-top:-6px}
@@ -126,6 +127,7 @@ input:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--gold);o
 /* Dirección de la web app de Google Apps Script. Vacía = modo prueba. */
 const API="https://script.google.com/macros/s/AKfycbwuoP5xBGYhc7bAyll4piJVT9dXwnm7_klG0iBX4fT_-veU94VXkJSjtgtvuQG-JT0MuA/exec";
 /* Links de cobro de Mercado Pago, uno por importe del lavado (45000, 50000, 55000 y 60000), por ejemplo {45000:"https://mpago.la/..."}. El motor agregado se paga en el local. Vacío = pago online sin conectar. */
+const ALIAS="autohouse.lg";
 const PAGOS={50000:"https://mpago.la/2BfG5Vi",55000:"https://mpago.la/19frheH",60000:"https://mpago.la/2ar4Uhj",70000:"https://mpago.la/1Vozsbg"};
 const WA="5492234557777";
 /* Adicionales del último paso. Precio 0 = se cotiza en el local y no suma al total. */
@@ -295,10 +297,12 @@ function route(){const m=location.hash.match(/^#c-(T[0-9a-f]{10})$/);if(m&&API){
 function party(d){const p=$("party");const cols=["#ffffff","#0d7a3a","#c6a35a","#0a0a0a"];let conf="";for(let i=0;i<40;i++)conf+=`<i class="conf" style="left:${Math.random()*100}%;background:${cols[i%4]};animation-duration:${1.6+Math.random()*1.6}s;animation-delay:${Math.random()*.6}s"></i>`;
   let first=true;const base=d.base;const draw=()=>{const link=PAGOS[base];let pay="";
   if(S.pago==="mp")pay=link?`<a class="pay" href="${link}" target="_blank" rel="noopener">Pagar ${money(base)}</a>${d.adic.length?`<p class="addr">Los adicionales se pagan en el local.</p>`:""}`:`<p>El pago online todavía no está conectado: se paga en el local.</p>`;
+  const ali=`<p class="addr ali">${S.pago==="mp"?"Si el link no te anda, transferí":"Si preferís transferir"} al alias <b>${ALIAS}</b> <button type="button" class="cpy" id="cpyal">Copiar</button></p>`;pay+=ali;
   p.innerHTML=`<div class="party${first?"":" still"}" role="status">${conf}<div class="tick">✓</div><h3>Turno confirmado!</h3><div class="card"><b>${fmtDay(d.fecha)} · ${d.hora}</b>${esc(d.auto)} ${esc(S.car?S.car.pat:d.patente)} · ${money(d.precio)}</div>${pay}${d.adic.length?`<p class="addr">Con ${esc(d.adic.join(", ").toLowerCase())}</p>`:""}${calBtns(d)}<a class="pay go" href="${MAPS}" target="_blank" rel="noopener">Ir</a><p class="addr">Hipólito Yrigoyen 3756, Mar del Plata</p>${d.codigo?`<a class="canc" href="#c-${d.codigo}">No podés venir? Cancelá el turno</a>`:""}<button type="button" id="again">Listo</button></div>`;p.hidden=false;first=false;
   const m=$("motor");if(m)m.onclick=async()=>{m.disabled=true;m.textContent="Agregando…";const nd={...d,precio:d.precio+MOTOR,servicio:d.servicio+" + lavado de motor",accion:"adicional"};let ok=true;
     if(API){try{const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(nd)});const j=await r.json();ok=!!j.ok}catch(e){ok=false}}
     if(ok){d.motor=true;d.precio=nd.precio;d.servicio=nd.servicio;conf="";draw()}else{m.disabled=false;m.textContent="No se pudo agregar. Tocá para reintentar"}};
+  const ca=$("cpyal");if(ca)ca.onclick=async()=>{try{await navigator.clipboard.writeText(ALIAS);ca.textContent="Copiado"}catch(e){ca.textContent=ALIAS}};
   $("again").onclick=()=>{p.hidden=true;S.ad.clear();S.cli=null;S.car=null;S.otro=false;Object.assign(S,{slot:null,tipo:null,pago:null,autoDay:true,known:false,skipNom:false,v:{tel:"",nom:"",auto:"",pat:""}});S.day=S.list[0];loadSlots(S.day);go("hora")}};draw()}
 buildDays();S.day=S.list[0];if(!route())render();loadSlots(S.day);
 window.addEventListener("hashchange",()=>{if(!route()&&S.step==="cancel")nuevoTurno()});
